@@ -13,10 +13,6 @@ class AuthController extends Controller
     {
         parent::__construct();
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/setup
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -46,11 +42,7 @@ class AuthController extends Controller
             }
         }
 
-<<<<<<< HEAD
-        return $this->render('auth/login', [
-=======
         return $this->render('Auth/login', [
->>>>>>> origin/setup
             'error' => $error ?? null,
             'email' => $_POST['email'] ?? ''
         ]);
@@ -93,11 +85,7 @@ class AuthController extends Controller
             }
         }
 
-<<<<<<< HEAD
-        return $this->render('auth/register', [
-=======
         return $this->render('Auth/register', [
->>>>>>> origin/setup
             'error' => $error ?? null,
             'email' => $_POST['email'] ?? ''
         ]);

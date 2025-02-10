@@ -14,11 +14,8 @@ CREATE TABLE
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
    );
 
-<<<<<<< HEAD
-=======
 CREATE TABLE
    categories (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL);
->>>>>>> origin/setup
 
 CREATE TABLE
    events (
@@ -37,11 +34,6 @@ CREATE TABLE
    );
 
 
-<<<<<<< HEAD
-CREATE TABLE
-   categories (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL);
-=======
->>>>>>> origin/setup
 
 
 CREATE TABLE

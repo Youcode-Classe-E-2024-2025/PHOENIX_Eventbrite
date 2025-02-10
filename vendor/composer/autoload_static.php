@@ -105,6 +105,12 @@ class ComposerStaticInitb2881b0947bac7fea18975d9cb8b7e57
     );
 
     public static $classMap = array (
+        'App\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Controllers/AuthController.php',
+        'App\\Core\\Controller' => __DIR__ . '/../..' . '/app/Core/Controller.php',
+        'App\\Core\\Router' => __DIR__ . '/../..' . '/app/Core/Router.php',
+        'App\\Core\\Security' => __DIR__ . '/../..' . '/app/Core/Security.php',
+        'App\\Core\\Twig\\SecurityExtension' => __DIR__ . '/../..' . '/app/Core/Twig/SecurityExtension.php',
+        'App\\Core\\Validator' => __DIR__ . '/../..' . '/app/Core/Validator.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'CURLStringFile' => __DIR__ . '/..' . '/symfony/polyfill-php81/Resources/stubs/CURLStringFile.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',

@@ -4,10 +4,11 @@
     "type": "project",
     "require": {
         "php": ">=8.1",
-        "twig/twig": "^3.0",
-        "vlucas/phpdotenv": "^5.5",
+        "ext-json": "*",
         "ext-pdo": "*",
-        "ext-json": "*"
+        "stripe/stripe-php": "^16.5",
+        "twig/twig": "^3.0",
+        "vlucas/phpdotenv": "^5.5"
     },
     "autoload": {
         "psr-4": {

@@ -7,3 +7,7 @@ $router->get('/', [AuthController::class, 'login']);
 $router->post('/', [AuthController::class, 'login']);
 $router->get('/register', [AuthController::class, 'register']);
 $router->post('/register', [AuthController::class, 'register']);
+
+
+// Dashboard route
+$router->get('/dashboard', [AuthController::class, 'dashboard']);

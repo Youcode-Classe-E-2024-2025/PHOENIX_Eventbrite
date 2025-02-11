@@ -1,0 +1,100 @@
+{% extends "layouts/base.twig" %}
+
+{% block title %}Organizer Dashboard - MVC Framework{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Organizer Dashboard</h2>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h4>Welcome, {{ user.name }}</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Joined:</strong> {{ user.created_at|date('Y-m-d') }}</p>
+        </div>
+    </div>
+
+    <!-- Section: Create and Manage Events -->
+    <div class="mt-4">
+        <h5>My Events</h5>
+        <a href="/events/create" class="btn btn-success mb-3">Create New Event</a>
+        <div class="card">
+            <div class="card-body">
+                {% if events is empty %}
+                    <p>You haven't created any events yet.</p>
+                {% else %}
+                    <ul class="list-group">
+                        {% for event in events %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>{{ event.name }}</strong> <br>
+                                    <small>Date: {{ event.date|date('Y-m-d') }}</small> | 
+                                    <small>Tickets Sold: {{ event.tickets_sold }}</small> | 
+                                    <small>Total Revenue: ${{ event.total_revenue }}</small>
+                                </div>
+                                <div>
+                                    <a href="/events/{{ event.id }}/edit" class="btn btn-sm btn-warning">Edit</a>
+                                    <a href="/events/{{ event.id }}" class="btn btn-sm btn-primary">View</a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Section: Sales and Statistics -->
+    <div class="mt-4">
+        <h5>Sales & Statistics</h5>
+        <div class="card">
+            <div class="card-body">
+                {% if statistics is empty %}
+                    <p>No sales data available yet.</p>
+                {% else %}
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Total Events:</strong> {{ statistics.total_events }}</li>
+                        <li class="list-group-item"><strong>Total Tickets Sold:</strong> {{ statistics.total_tickets_sold }}</li>
+                        <li class="list-group-item"><strong>Total Revenue:</strong> ${{ statistics.total_revenue }}</li>
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Section: Manage Promo Codes -->
+    <div class="mt-4">
+        <h5>Promo Codes</h5>
+        <a href="/promo-codes/create" class="btn btn-success mb-3">Create New Promo Code</a>
+        <div class="card">
+            <div class="card-body">
+                {% if promo_codes is empty %}
+                    <p>No promo codes created yet.</p>
+                {% else %}
+                    <ul class="list-group">
+                        {% for promo in promo_codes %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>{{ promo.code }}</strong> - {{ promo.discount_percentage }}% Off <br>
+                                    <small>Valid until: {{ promo.expiry_date|date('Y-m-d') }}</small>
+                                </div>
+                                <a href="/promo-codes/{{ promo.id }}/edit" class="btn btn-sm btn-warning">Edit</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Section: Export Participants -->
+    <div class="mt-4">
+        <h5>Export Participants</h5>
+        <p>You can export the list of participants for each event in CSV or PDF format.</p>
+        <a href="/participants/export/csv" class="btn btn-primary">Export as CSV</a>
+        <a href="/participants/export/pdf" class="btn btn-secondary">Export as PDF</a>
+    </div>
+</div>
+{% endblock %}

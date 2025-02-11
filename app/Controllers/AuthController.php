@@ -76,7 +76,7 @@ class AuthController extends Controller
                         $_SESSION['user_id'] = $user->getId();
                         $_SESSION['user_role'] = $user->getRole();
 
-                        $this->redirect('/login');
+                        $this->redirect('/dashboard');
                     }
 
                     $error = 'Error creating account';
@@ -109,5 +109,15 @@ class AuthController extends Controller
 
         // Redirect to login
         $this->redirect('/login');
+    }
+
+
+    public function dashboard()
+    {
+        // if (!isset($_SESSION['user_id'])) {
+        //     $this->redirect('/login');
+        // }
+
+        return $this->render('/Participants/dashboard');
     }
 }

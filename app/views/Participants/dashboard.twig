@@ -1,0 +1,62 @@
+{% extends "layouts/base.twig" %}
+
+{% block title %}Participant Dashboard - MVC Framework{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Participant Dashboard</h2>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h4>Welcome, {{ user.name }}</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Joined:</strong> {{ user.created_at|date('Y-m-d') }}</p>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <h5>My Participated Events</h5>
+        <div class="card">
+            <div class="card-body">
+                {% if events is empty %}
+                    <p>You haven't participated in any events yet.</p>
+                {% else %}
+                    <ul class="list-group">
+                        {% for event in events %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>{{ event.name }}</strong> <br>
+                                    <small>Date: {{ event.date|date('Y-m-d') }}</small>
+                                </div>
+                                <a href="/events/{{ event.id }}" class="btn btn-sm btn-primary">View Details</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <h5>My Notifications</h5>
+        <div class="card">
+            <div class="card-body">
+                {% if notifications is empty %}
+                    <p>No notifications at the moment.</p>
+                {% else %}
+                    <ul class="list-group">
+                        {% for notification in notifications %}
+                            <li class="list-group-item">
+                                {{ notification.message }} <br>
+                                <small class="text-muted">Received on {{ notification.created_at|date('Y-m-d H:i') }}</small>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

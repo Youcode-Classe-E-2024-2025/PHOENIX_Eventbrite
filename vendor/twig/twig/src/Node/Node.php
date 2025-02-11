@@ -148,11 +148,10 @@ class Node implements \Countable, \IteratorAggregate
     /**
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return \count($this->nodes);
     }
-
     public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->nodes);

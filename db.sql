@@ -77,12 +77,8 @@ INSERT INTO
    users (email, password_hash, role, avatar_url, full_name)
 VALUES
    (
-<<<<<<< HEAD
-      'admin@phoenix.com', '$2y$10$PSGT25Xh.ms55i/SJsuRTOMPqfjnHrK06JG4Zb2h.jP/WsP1XbybK',
-=======
       'admin@phoenix.com',
       '$2y$10$PSGT25Xh.ms55i/SJsuRTOMPqfjnHrK06JG4Zb2h.jP/WsP1XbybK',
->>>>>>> setup
       'Admin',
       'https://example.com/avatar1.jpg',
       'Admin User'
@@ -198,5 +194,6 @@ INSERT INTO
 VALUES
    (1, 100.00, 'Stripe', 'txn_123456789', 'Réussi'), 
    (2, 50.00, 'PayPal', 'txn_987654321', 'Réussi');
+
 
 

@@ -83,10 +83,6 @@ class User
     {
         return $this->id;
     }
-    public function getUsername(): string
-    {
-        return $this->username;
-    }
     public function getEmail(): string
     {
         return $this->email;
@@ -100,11 +96,6 @@ class User
         return $this->created_at;
     }
 
-    // Setters
-    public function setUsername(string $username): void
-    {
-        $this->username = $username;
-    }
     public function setEmail(string $email): void
     {
         $this->email = $email;

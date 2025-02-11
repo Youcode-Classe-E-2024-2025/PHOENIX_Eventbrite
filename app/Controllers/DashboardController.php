@@ -18,10 +18,10 @@ class DashboardController extends Controller
         
         switch ($case) {
             case 'Admin':
-                $this->render('admin-dashboard');
+                $this->render('Admin/index');
                 break;
             case 'Organisateur':
-                $this->render('user-dashboard');
+                $this->render('Organisateur/index');
                 break;
             default:
                 var_dump('Entering default case'); // Add this line

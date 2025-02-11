@@ -28,6 +28,8 @@ class AuthController extends Controller
             if ($validator->isValid()) {
                 $user = User::findByEmail($_POST['email']);
 
+                var_dump($user);
+
                 if ($user && $user->verifyPassword($_POST['password'])) {
                     $_SESSION['user_id'] = $user->getId();
                     $_SESSION['user_role'] = $user->getRole();
@@ -36,11 +38,13 @@ class AuthController extends Controller
                     }elseif ($_SESSION['user_role'] === 'Organisateur') {
                         $this->redirect('/dashboard');
                     }elseif ($_SESSION['user_role'] === 'Participant') {
-                        $this->redirect('/participants/index.twig');
+                        $this->redirect('/dashboard');
                     }
+                } else {
+                    var_dump($user->verifyPassword($_POST['password']));
                 }
 
-                $error = 'Invalid email or password';
+                $error = 'Invalid email or t';
             } else {
                 $error = $validator->getErrors();
             }
@@ -117,16 +121,10 @@ class AuthController extends Controller
 
     public function dashboard()
     {
-        if (!isset($_SESSION['user_id'])) {
-            $this->redirect('/login');
-        }elseif ($_SESSION['user_role'] !== 'Admin') {
-            $this->redirect('/dashboard');
-        }elseif ($_SESSION['user_role'] !== 'Organisateur') {
-            $this->redirect('/dashboard');
-        }elseif ($_SESSION['user_role'] !== 'Participant') {
-            $this->redirect('/dashboard');
+        if (!isset($_SESSION['user_role'])) {
+            $this->redirect('/');
         }
 
-        return $this->render('Participants/index.twig');
+        return $this->render('Participants/index');
     }
 }

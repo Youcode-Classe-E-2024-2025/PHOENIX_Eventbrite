@@ -19,13 +19,13 @@ abstract class Controller
         $this->twig->addExtension(new \App\Core\Twig\SecurityExtension());
     }
 
-    protected function render(string $view, array $data = []): string
+    protected function render(string $view, array $data = []): void
     {
         // Add session data to all views
         $data['session'] = $_SESSION;
         $data['is_authenticated'] = $this->isAuthenticated();
-
-        return $this->twig->render($view . '.twig', $data);
+    
+        echo $this->twig->render($view . '.twig', $data);
     }
 
     protected function json(array $data, int $status = 200): string
@@ -37,7 +37,7 @@ abstract class Controller
 
     protected function redirect(string $path): void
     {
-        header("Location: {$path}");
+        header("Location: $path");
         exit;
     }
 

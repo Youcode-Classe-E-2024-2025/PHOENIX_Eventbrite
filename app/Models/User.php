@@ -20,7 +20,7 @@ class User
             $this->id = $data['id'] ?? null;
             $this->full_name = $data['full_name'] ?? '';
             $this->email = $data['email'] ?? '';
-            $this->password = $data['password'] ?? '';
+            $this->password = $data['password_hash'] ?? '';
             $this->role = $data['role'] ?? 'user';
             $this->created_at = $data['created_at'] ?? date('Y-m-d H:i:s');
         }
@@ -96,7 +96,16 @@ class User
         return $this->created_at;
     }
 
+<<<<<<< HEAD
     // Setters
+=======
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    
+>>>>>>> origin/setup
     public function setEmail(string $email): void
     {
         $this->email = $email;

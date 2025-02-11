@@ -8,7 +8,7 @@ class Router
     {
         $params = [];
 
-        // Normalize paths
+        
         $routePath = trim($routePath, '/');
         $requestPath = trim($requestPath, '/');
 
@@ -60,7 +60,7 @@ class Router
 
         foreach ($this->routes as $route) {
             if ($this->matchRoute($route['path'], $path) && $route['method'] === $requestMethod) {
-                // Execute middlewares
+                
                 foreach ($route['middleware'] as $middleware) {
                     if (isset($this->middlewares[$middleware])) {
                         $response = ($this->middlewares[$middleware])();
@@ -70,14 +70,13 @@ class Router
                     }
                 }
 
-                // Extract parameters from the URL
                 $params = $this->extractParams($route['path'], $path);
 
-                // Execute controller action
+                
                 $controller = new $route['handler'][0]();
                 $action = $route['handler'][1];
 
-                // If we have parameters, pass them to the action
+                
                 if (!empty($params)) {
                     return $controller->$action(...array_values($params));
                 }
@@ -91,11 +90,11 @@ class Router
 
     private function matchRoute(string $routePath, string $requestPath): bool
     {
-        // Normalize paths
+        
         $routePath = trim($routePath, '/');
         $requestPath = trim($requestPath, '/');
 
-        // Handle root path
+        
         if ($routePath === '' && $requestPath === '') {
             return true;
         }
@@ -108,7 +107,7 @@ class Router
         }
 
         foreach ($routeSegments as $key => $segment) {
-            // Handle dynamic segments
+            
             if (strpos($segment, ':') === 0) {
                 continue;
             }

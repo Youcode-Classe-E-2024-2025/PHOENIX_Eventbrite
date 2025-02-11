@@ -1,0 +1,61 @@
+{% extends 'Layouts/base.twig' %}
+
+{% block title %}Dashboard - Participants{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Dashboard</h2>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Profil utilisateur</div>
+                <div class="card-body text-center">
+                    <img src="{{ user.avatar ?? '/images/default-avatar.png' }}" class="rounded-circle mb-3" width="100" height="100" alt="Avatar">
+                    <h5>{{ user.name }}</h5>
+                    <p class="text-muted">{{ user.role | capitalize }}</p>
+                    <a href="/profile" class="btn btn-primary btn-sm">Modifier le profil</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">Historique des événements</div>
+                <div class="card-body">
+                    {% if user.events|length > 0 %}
+                        <ul class="list-group">
+                            {% for event in user.events %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ event.name }}
+                                    <span class="badge bg-info">{{ event.date|date('d/m/Y') }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">Aucun événement enregistré.</p>
+                    {% endif %}
+                </div>
+            </div>
+        
+            <div class="card">
+                <div class="card-header">Notifications</div>
+                <div class="card-body">
+                    {% if notifications|length > 0 %}
+                        <ul class="list-group">
+                            {% for notification in notifications %}
+                                <li class="list-group-item">
+                                    <i class="bi bi-bell me-2"></i> {{ notification.message }}
+                                    <small class="text-muted d-block">{{ notification.date|date('d/m/Y H:i') }}</small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">Aucune notification.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

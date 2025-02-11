@@ -6,6 +6,7 @@ use App\Core\Controller;
 use App\Core\Security;
 use App\Core\Validator;
 use App\Models\User;
+use App\Controllers\DashboardController;
 
 class AuthController extends Controller
 {
@@ -26,16 +27,11 @@ class AuthController extends Controller
 
             if ($validator->isValid()) {
                 $user = User::findByEmail($_POST['email']);
-
                 if ($user && $user->verifyPassword($_POST['password'])) {
                     $_SESSION['user_id'] = $user->getId();
                     $_SESSION['user_role'] = $user->getRole();
-                    if ($_SESSION['user_role'] === 'admin') {
-                        $this->redirect('/admin/dashboard');
-                    }
                     $this->redirect('/dashboard');
                 }
-
                 $error = 'Invalid email or password';
             } else {
                 $error = $validator->getErrors();
@@ -76,7 +72,11 @@ class AuthController extends Controller
                         $_SESSION['user_id'] = $user->getId();
                         $_SESSION['user_role'] = $user->getRole();
 
+<<<<<<< HEAD
                         $this->redirect('/dashboard');
+=======
+                        $this->redirect('/');
+>>>>>>> origin/setup
                     }
 
                     $error = 'Error creating account';
@@ -108,7 +108,7 @@ class AuthController extends Controller
         session_destroy();
 
         // Redirect to login
-        $this->redirect('/login');
+        $this->redirect('/');
     }
 
 

@@ -32,3 +32,9 @@
 [2025-02-10 15:49:01] [ERROR] Route not found {"file":"\/var\/www\/html\/collab\/app\/Core\/Router.php","line":89,"trace":"#0 \/var\/www\/html\/collab\/public\/index.php(31): App\\Core\\Router->dispatch()\n#1 {main}"}
 [2025-02-10 15:50:54] [ERROR] Route not found {"file":"\/var\/www\/html\/collab\/app\/Core\/Router.php","line":89,"trace":"#0 \/var\/www\/html\/collab\/public\/index.php(31): App\\Core\\Router->dispatch()\n#1 {main}"}
 >>>>>>> origin/setup
+[2025-02-10 22:46:14] [ERROR] Route not found {"file":"C:\\laragon\\www\\phoenix\\app\\Core\\Router.php","line":89,"trace":"#0 C:\\laragon\\www\\phoenix\\public\\index.php(31): App\\Core\\Router->dispatch()\n#1 {main}"}
+[2025-02-10 22:46:31] [ERROR] Route not found {"file":"C:\\laragon\\www\\phoenix\\app\\Core\\Router.php","line":89,"trace":"#0 C:\\laragon\\www\\phoenix\\public\\index.php(31): App\\Core\\Router->dispatch()\n#1 {main}"}
+[2025-02-11 09:10:15] [ERROR] Route not found {"file":"C:\\laragon\\www\\phoenix\\app\\Core\\Router.php","line":89,"trace":"#0 C:\\laragon\\www\\phoenix\\public\\index.php(31): App\\Core\\Router->dispatch()\n#1 {main}"}
+[2025-02-11 09:11:54] [ERROR] Route not found {"file":"C:\\laragon\\www\\phoenix\\app\\Core\\Router.php","line":89,"trace":"#0 C:\\laragon\\www\\phoenix\\public\\index.php(31): App\\Core\\Router->dispatch()\n#1 {main}"}
+[2025-02-11 09:14:00] [ERROR] Route not found {"file":"C:\\laragon\\www\\phoenix\\app\\Core\\Router.php","line":89,"trace":"#0 C:\\laragon\\www\\phoenix\\public\\index.php(31): App\\Core\\Router->dispatch()\n#1 {main}"}
+[2025-02-11 09:20:32] [ERROR] Route not found {"file":"C:\\laragon\\www\\phoenix\\app\\Core\\Router.php","line":89,"trace":"#0 C:\\laragon\\www\\phoenix\\public\\index.php(31): App\\Core\\Router->dispatch()\n#1 {main}"}

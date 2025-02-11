@@ -77,8 +77,7 @@ INSERT INTO
    users (email, password_hash, role, avatar_url, full_name)
 VALUES
    (
-      'admin@phoenix.com',
-      '$2y$10$PSGT25Xh.ms55i/SJsuRTOMPqfjnHrK06JG4Zb2h.jP/WsP1XbybK',
+      'admin@phoenix.com', '$2y$10$PSGT25Xh.ms55i/SJsuRTOMPqfjnHrK06JG4Zb2h.jP/WsP1XbybK',
       'Admin',
       'https://example.com/avatar1.jpg',
       'Admin User'

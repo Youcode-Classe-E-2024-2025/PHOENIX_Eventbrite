@@ -96,16 +96,7 @@ class User
         return $this->created_at;
     }
 
-<<<<<<< HEAD
     // Setters
-=======
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-    
->>>>>>> origin/setup
     public function setEmail(string $email): void
     {
         $this->email = $email;

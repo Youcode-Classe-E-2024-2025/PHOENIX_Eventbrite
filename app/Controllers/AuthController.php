@@ -72,11 +72,7 @@ class AuthController extends Controller
                         $_SESSION['user_id'] = $user->getId();
                         $_SESSION['user_role'] = $user->getRole();
 
-<<<<<<< HEAD
                         $this->redirect('/dashboard');
-=======
-                        $this->redirect('/');
->>>>>>> origin/setup
                     }
 
                     $error = 'Error creating account';

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php 
 namespace App\Controllers;
 use App\Core\Controller;
@@ -14,26 +13,6 @@ class DashboardController extends Controller{
 
     public function AffichageEventsPracipant($id_user){
         return $this->Event->SelectEventPraticiper($id_user);
-    }
-
-
-
-} 
-
-
-
-?>
-=======
-<?php
-
-namespace App\Controllers;
-
-use App\Core\Controller;
-class DashboardController extends Controller
-{
-    public function __construct()
-    {
-        parent::__construct();
     }
 
     public function dashboard()
@@ -56,4 +35,3 @@ class DashboardController extends Controller
         }
     }
 }
->>>>>>> origin/setup

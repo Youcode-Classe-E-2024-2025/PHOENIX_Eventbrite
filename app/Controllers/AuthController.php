@@ -31,10 +31,13 @@ class AuthController extends Controller
                 if ($user && $user->verifyPassword($_POST['password'])) {
                     $_SESSION['user_id'] = $user->getId();
                     $_SESSION['user_role'] = $user->getRole();
-                    if ($_SESSION['user_role'] === 'admin') {
-                        $this->redirect('/admin/dashboard');
+                    if ($_SESSION['user_role'] === 'Admin') {
+                        $this->redirect('/dashboard');
+                    }elseif ($_SESSION['user_role'] === 'Organisateur') {
+                        $this->redirect('/dashboard');
+                    }elseif ($_SESSION['user_role'] === 'Participant') {
+                        $this->redirect('/participants/index.twig');
                     }
-                    $this->redirect('/dashboard');
                 }
 
                 $error = 'Invalid email or password';
@@ -77,7 +80,7 @@ class AuthController extends Controller
                         $_SESSION['user_id'] = $user->getId();
                         $_SESSION['user_role'] = $user->getRole();
 
-                        $this->redirect('/login');
+                        $this->redirect('/');
                     }
 
                     $error = 'Error creating account';
@@ -110,5 +113,20 @@ class AuthController extends Controller
 
         // Redirect to login
         $this->redirect('/login');
+    }
+
+    public function dashboard()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            $this->redirect('/login');
+        }elseif ($_SESSION['user_role'] !== 'Admin') {
+            $this->redirect('/dashboard');
+        }elseif ($_SESSION['user_role'] !== 'Organisateur') {
+            $this->redirect('/dashboard');
+        }elseif ($_SESSION['user_role'] !== 'Participant') {
+            $this->redirect('/dashboard');
+        }
+
+        return $this->render('Participants/index.twig');
     }
 }

@@ -17,32 +17,35 @@ namespace Twig;
  */
 final class Token
 {
-    public const EOF_TYPE = -1;
-    public const TEXT_TYPE = 0;
-    public const BLOCK_START_TYPE = 1;
-    public const VAR_START_TYPE = 2;
-    public const BLOCK_END_TYPE = 3;
-    public const VAR_END_TYPE = 4;
-    public const NAME_TYPE = 5;
-    public const NUMBER_TYPE = 6;
-    public const STRING_TYPE = 7;
-    public const OPERATOR_TYPE = 8;
-    public const PUNCTUATION_TYPE = 9;
-    public const INTERPOLATION_START_TYPE = 10;
-    public const INTERPOLATION_END_TYPE = 11;
-    public const ARROW_TYPE = 12;
-    public const SPREAD_TYPE = 13;
+    private $value;
+    private $type;
+    private $lineno;
 
-    public function __construct(
-        private int $type,
-        private $value,
-        private int $lineno,
-    ) {
+    const EOF_TYPE = -1;
+    const TEXT_TYPE = 0;
+    const BLOCK_START_TYPE = 1;
+    const VAR_START_TYPE = 2;
+    const BLOCK_END_TYPE = 3;
+    const VAR_END_TYPE = 4;
+    const NAME_TYPE = 5;
+    const NUMBER_TYPE = 6;
+    const STRING_TYPE = 7;
+    const OPERATOR_TYPE = 8;
+    const PUNCTUATION_TYPE = 9;
+    const INTERPOLATION_START_TYPE = 10;
+    const INTERPOLATION_END_TYPE = 11;
+    const ARROW_TYPE = 12;
+
+    public function __construct(int $type, $value, int $lineno)
+    {
+        $this->type = $type;
+        $this->value = $value;
+        $this->lineno = $lineno;
     }
 
-    public function __toString(): string
+    public function __toString()
     {
-        return \sprintf('%s(%s)', self::typeToString($this->type, true), $this->value);
+        return sprintf('%s(%s)', self::typeToString($this->type, true), $this->value);
     }
 
     /**
@@ -64,9 +67,9 @@ final class Token
         }
 
         return ($this->type === $type) && (
-            null === $values
-            || (\is_array($values) && \in_array($this->value, $values))
-            || $this->value == $values
+            null === $values ||
+            (\is_array($values) && \in_array($this->value, $values)) ||
+            $this->value == $values
         );
     }
 
@@ -75,27 +78,14 @@ final class Token
         return $this->lineno;
     }
 
-    /**
-     * @deprecated since Twig 3.19
-     */
     public function getType(): int
     {
-        trigger_deprecation('twig/twig', '3.19', \sprintf('The "%s()" method is deprecated.', __METHOD__));
-
         return $this->type;
     }
 
-    /**
-     * @return mixed
-     */
     public function getValue()
     {
         return $this->value;
-    }
-
-    public function toEnglish(): string
-    {
-        return self::typeToEnglish($this->type);
     }
 
     public static function typeToString(int $type, bool $short = false): string
@@ -143,11 +133,8 @@ final class Token
             case self::ARROW_TYPE:
                 $name = 'ARROW_TYPE';
                 break;
-            case self::SPREAD_TYPE:
-                $name = 'SPREAD_TYPE';
-                break;
             default:
-                throw new \LogicException(\sprintf('Token of type "%s" does not exist.', $type));
+                throw new \LogicException(sprintf('Token of type "%s" does not exist.', $type));
         }
 
         return $short ? $name : 'Twig\Token::'.$name;
@@ -184,10 +171,8 @@ final class Token
                 return 'end of string interpolation';
             case self::ARROW_TYPE:
                 return 'arrow function';
-            case self::SPREAD_TYPE:
-                return 'spread operator';
             default:
-                throw new \LogicException(\sprintf('Token of type "%s" does not exist.', $type));
+                throw new \LogicException(sprintf('Token of type "%s" does not exist.', $type));
         }
     }
 }

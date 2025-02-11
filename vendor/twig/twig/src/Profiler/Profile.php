@@ -16,20 +16,23 @@ namespace Twig\Profiler;
  */
 final class Profile implements \IteratorAggregate, \Serializable
 {
-    public const ROOT = 'ROOT';
-    public const BLOCK = 'block';
-    public const TEMPLATE = 'template';
-    public const MACRO = 'macro';
+    const ROOT = 'ROOT';
+    const BLOCK = 'block';
+    const TEMPLATE = 'template';
+    const MACRO = 'macro';
+
+    private $template;
+    private $name;
+    private $type;
     private $starts = [];
     private $ends = [];
     private $profiles = [];
 
-    public function __construct(
-        private string $template = 'main',
-        private string $type = self::ROOT,
-        private string $name = 'main',
-    ) {
-        $this->name = str_starts_with($name, '__internal_') ? 'INTERNAL' : $name;
+    public function __construct(string $template = 'main', string $type = self::ROOT, string $name = 'main')
+    {
+        $this->template = $template;
+        $this->type = $type;
+        $this->name = 0 === strpos($name, '__internal_') ? 'INTERNAL' : $name;
         $this->enter();
     }
 
@@ -97,22 +100,6 @@ final class Profile implements \IteratorAggregate, \Serializable
         }
 
         return isset($this->ends['wt']) && isset($this->starts['wt']) ? $this->ends['wt'] - $this->starts['wt'] : 0;
-    }
-
-    /**
-     * Returns the start time in microseconds.
-     */
-    public function getStartTime(): float
-    {
-        return $this->starts['wt'] ?? 0.0;
-    }
-
-    /**
-     * Returns the end time in microseconds.
-     */
-    public function getEndTime(): float
-    {
-        return $this->ends['wt'] ?? 0.0;
     }
 
     /**
@@ -189,6 +176,6 @@ final class Profile implements \IteratorAggregate, \Serializable
      */
     public function __unserialize(array $data): void
     {
-        [$this->template, $this->name, $this->type, $this->starts, $this->ends, $this->profiles] = $data;
+        list($this->template, $this->name, $this->type, $this->starts, $this->ends, $this->profiles) = $data;
     }
 }

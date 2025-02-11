@@ -1,17 +1,21 @@
-<?php 
+<?php
+
 namespace App\Controllers;
+
 use App\Core\Controller;
 use App\Models\Event;
 
-class DashboardController extends Controller{
-    private Event $Event ;
+class DashboardController extends Controller
+{
+    private Event $Event;
 
-    public function __construct(){
-        $this->Event; 
-    }
-    
+    // public function __construct(){
+    //     $this->Event; 
+    // }
 
-    public function AffichageEventsPracipant($id_user){
+
+    public function AffichageEventsPracipant($id_user)
+    {
         return $this->Event->SelectEventPraticiper($id_user);
     }
 
@@ -19,8 +23,8 @@ class DashboardController extends Controller{
     {
         $case = $_SESSION['user_role'];
         error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-        
+        ini_set('display_errors', 1);
+
         switch ($case) {
             case 'Admin':
                 $this->render('Admin/index');
@@ -29,7 +33,6 @@ class DashboardController extends Controller{
                 $this->render('Organisateur/index');
                 break;
             default:
-                var_dump('Entering default case'); // Add this line
                 $this->render('Participant/index');
                 break;
         }

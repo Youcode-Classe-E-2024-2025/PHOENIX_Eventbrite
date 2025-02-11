@@ -60,21 +60,24 @@ class AuthController extends Controller
             $validator->required('email')->email('email')
                 ->required('password')->minLength('password', 6)
                 ->required('password_confirm')
-                ->matches('password_confirm', 'password');
+                ->matches('password_confirm', 'password')
+                ->required('first_name')
+                ->required('last_name');
 
             if ($validator->isValid()) {
                 if (!User::findByEmail($_POST['email'])) {
                     $user = new User([
                         'email' => $_POST['email'],
                         'password' => $_POST['password'],
-                        'role' => 'user'
+                        'role' => $_POST['role'],
+                        'full_name' => $_POST['first_name'] . ' ' . $_POST['last_name']
                     ]);
 
                     if ($user->save()) {
                         $_SESSION['user_id'] = $user->getId();
                         $_SESSION['user_role'] = $user->getRole();
 
-                        $this->redirect('/dashboard');
+                        $this->redirect('/login');
                     }
 
                     $error = 'Error creating account';

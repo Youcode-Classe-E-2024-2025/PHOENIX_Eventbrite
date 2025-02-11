@@ -8,7 +8,7 @@ use App\Core\Security;
 class User
 {
     private ?int $id = null;
-    private string $username;
+    private string $full_name;
     private string $email;
     private string $password;
     private string $role;
@@ -18,7 +18,7 @@ class User
     {
         if (!empty($data)) {
             $this->id = $data['id'] ?? null;
-            $this->username = $data['username'] ?? '';
+            $this->full_name = $data['full_name'] ?? '';
             $this->email = $data['email'] ?? '';
             $this->password = $data['password'] ?? '';
             $this->role = $data['role'] ?? 'user';
@@ -31,18 +31,19 @@ class User
         $db = Database::getInstance();
 
         if ($this->id === null) {
-            $sql = "INSERT INTO users (email, password, role, created_at) VALUES (?, ?, ?, ?)";
+            $sql = "INSERT INTO users (email, password_hash, role, full_name, created_at) VALUES (?, ?, ?, ?, ?)";
             $stmt = $db->prepare($sql);
             return $stmt->execute([
                 $this->email,
                 Security::hashPassword($this->password),
                 $this->role,
+                $this->full_name,
                 $this->created_at
             ]);
         } else {
-            $sql = "UPDATE users SET email = ?, password = ?, role = ? WHERE id = ?";
+            $sql = "UPDATE users SET email = ?, password = ?, role = ?, full_name = ?, created_at = ? WHERE id = ?";
             $stmt = $db->prepare($sql);
-            return $stmt->execute([$this->email, Security::hashPassword($this->password), $this->role, $this->id]);
+            return $stmt->execute([$this->email, Security::hashPassword($this->password), $this->role, $this->full_name, $this->created_at, $this->id]);
         }
     }
 

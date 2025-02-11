@@ -10,18 +10,22 @@ class DashboardController extends Controller
         parent::__construct();
     }
 
-public function dashboard()
+    public function dashboard()
     {
         $case = $_SESSION['user_role'];
+        error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+        
         switch ($case) {
             case 'Admin':
-                $this->render('/admin-dashboard');
+                $this->render('admin-dashboard');
                 break;
             case 'Organisateur':
-                $this->render('/user-dashboard');
+                $this->render('user-dashboard');
                 break;
             default:
-                $this->render('/Participant/index');
+                var_dump('Entering default case'); // Add this line
+                $this->render('Participant/index');
                 break;
         }
     }

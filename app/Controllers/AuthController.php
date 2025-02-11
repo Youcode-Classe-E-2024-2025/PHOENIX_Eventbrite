@@ -6,6 +6,7 @@ use App\Core\Controller;
 use App\Core\Security;
 use App\Core\Validator;
 use App\Models\User;
+use App\Controllers\DashboardController;
 
 class AuthController extends Controller
 {
@@ -27,24 +28,12 @@ class AuthController extends Controller
 
             if ($validator->isValid()) {
                 $user = User::findByEmail($_POST['email']);
-
-                var_dump($user);
-
                 if ($user && $user->verifyPassword($_POST['password'])) {
                     $_SESSION['user_id'] = $user->getId();
                     $_SESSION['user_role'] = $user->getRole();
-                    if ($_SESSION['user_role'] === 'Admin') {
-                        $this->redirect('/dashboard');
-                    }elseif ($_SESSION['user_role'] === 'Organisateur') {
-                        $this->redirect('/dashboard');
-                    }elseif ($_SESSION['user_role'] === 'Participant') {
-                        $this->redirect('/dashboard');
-                    }
-                } else {
-                    var_dump($user->verifyPassword($_POST['password']));
+                    $this->redirect('/dashboard');
                 }
-
-                $error = 'Invalid email or t';
+                $error = 'Invalid email or password';
             } else {
                 $error = $validator->getErrors();
             }
@@ -116,15 +105,6 @@ class AuthController extends Controller
         session_destroy();
 
         // Redirect to login
-        $this->redirect('/login');
-    }
-
-    public function dashboard()
-    {
-        if (!isset($_SESSION['user_role'])) {
-            $this->redirect('/');
-        }
-
-        return $this->render('Participants/index');
+        $this->redirect('/');
     }
 }

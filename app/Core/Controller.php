@@ -37,7 +37,7 @@ abstract class Controller
 
     protected function redirect(string $path): void
     {
-        header("Location: {$path}");
+        header("Location: $path");
         exit;
     }
 

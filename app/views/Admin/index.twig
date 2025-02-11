@@ -3,58 +3,44 @@
 {% block title %}Admin Dashboard - PHOENIX EVENTBRITE{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container flex-1">
     <h2 class="mb-4">Admin Dashboard</h2>
     
-    <div class="row">
-        <!-- User Management -->
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">Gérer les utilisateurs</div>
+    <div class="row">    
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Statistiques Globales</h5>
+                </div>
                 <div class="card-body">
-                    <ul class="list-group">
-                        {% for user in users %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {{ user.name }} ({{ user.role }})
-                            <div>
-                                <a href="/admin/edit-user/{{ user.id }}" class="btn btn-warning btn-sm">Modifier</a>
-                                <a href="/admin/ban-user/{{ user.id }}" class="btn btn-danger btn-sm">Bannir</a>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card bg-primary text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Utilisateurs</h5>
+                                    <h2 class="mb-0">{{ dashboard.totalUsers }}</h2>
+                                </div>
                             </div>
-                        </li>
-                        {% endfor %}
-                    </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Événements</h5>
+                                    <h2 class="mb-0">{{ dashboard.totalEvents }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-warning text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Événements en attente</h5>
+                                    <h2 class="mb-0">{{ dashboard.pendingEvents|length }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Event Validation -->
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header bg-success text-white">Valider ou refuser les événements</div>
-                <div class="card-body">
-                    <ul class="list-group">
-                        {% for event in pending_events %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {{ event.title }} ({{ event.organizer }})
-                            <div>
-                                <a href="/admin/approve-event/{{ event.id }}" class="btn btn-success btn-sm">Valider</a>
-                                <a href="/admin/reject-event/{{ event.id }}" class="btn btn-danger btn-sm">Refuser</a>
-                            </div>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Global Statistics -->
-    <div class="card">
-        <div class="card-header bg-dark text-white">Statistiques globales</div>
-        <div class="card-body">
-            <p><strong>Total Utilisateurs :</strong> {{ total_users }}</p>
-            <p><strong>Total Événements :</strong> {{ total_events }}</p>
-            <p><strong>Événements en attente :</strong> {{ pending_events|length }}</p>
         </div>
     </div>
 </div>

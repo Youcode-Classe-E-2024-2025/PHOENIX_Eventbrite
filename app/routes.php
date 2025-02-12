@@ -14,7 +14,5 @@ $router->get('/logout', [AuthController::class, 'logout']);
 
 // Dashboard route
 $router->get('/dashboard', [DashboardController::class, 'dashboard']);
-$router->get('/edit-user/{id}', [AdminController::class, 'UpdateUser']);
-$router->post('/edit-user/{id}', [AdminController::class, 'UpdateUser']);
-// $router->get('/admin/events', [AdminController::class, 'totalEvents']);
-// $router->get('/admin/events/pending', [AdminController::class, 'pendingEvents']);
+$router->get('/edit-user/:id', [AdminController::class, 'UpdateUser']);
+$router->post('/edit-user/:id', [AdminController::class, 'UpdateUser']);

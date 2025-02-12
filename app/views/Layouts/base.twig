@@ -86,7 +86,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    {% if is_authenticated %}
+                    {% if is_authenticated and session.user_role == 'Participant' %}
                         <li class="nav-item">
                             <a class="nav-link" href="/events">
                                 <i class="bi bi-speedometer2 me-1"></i>Events
@@ -95,6 +95,48 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/reservations">
                                 <i class="bi bi-speedometer2 me-1"></i>Reservations
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/profile">
+                                <i class="bi bi-person-circle me-1"></i>Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" href="/logout">
+                                <i class="bi bi-box-arrow-right me-1"></i>Logout
+                            </a>
+                        </li>
+                    {% elseif is_authenticated and session.user_role == 'Organisateur' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/events">
+                                <i class="bi bi-speedometer2 me-1"></i>Events
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/reservations">
+                                <i class="bi bi-speedometer2 me-1"></i>Reservations
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/profile">
+                                <i class="bi bi-person-circle me-1"></i>Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" href="/logout">
+                                <i class="bi bi-box-arrow-right me-1"></i>Logout
+                            </a>
+                        </li>
+                    {% elseif is_authenticated and session.user_role == 'Admin' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Statistics">
+                                <i class="bi bi-speedometer2 me-1"></i>Statistics
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/events">
+                                <i class="bi bi-speedometer2 me-1"></i>Events
                             </a>
                         </li>
                         <li class="nav-item">

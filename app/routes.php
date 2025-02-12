@@ -2,6 +2,7 @@
 
 use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
+use App\Controllers\AdminController;
 
 // Home route
 $router->get('/', [AuthController::class, 'login']);
@@ -13,3 +14,7 @@ $router->get('/logout', [AuthController::class, 'logout']);
 
 // Dashboard route
 $router->get('/dashboard', [DashboardController::class, 'dashboard']);
+$router->get('/dashboard', [DashboardController::class, 'dashboard']);
+$router->get('/totalUsers', [AdminController::class, 'totalUsers']);
+// $router->get('/admin/events', [AdminController::class, 'totalEvents']);
+// $router->get('/admin/events/pending', [AdminController::class, 'pendingEvents']);

@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\User;
+
 use App\Core\Controller;
 use App\Models\Event;
 
@@ -19,6 +21,18 @@ class DashboardController extends Controller
         return $this->Event->SelectEventPraticiper($id_user);
     }
 
+
+
+    public function totalUsers()
+{
+    $users = User::findAll();
+    $totalUsers = count($users);
+    
+    return $totalUsers;
+}
+
+
+
     public function dashboard()
     {
         $case = $_SESSION['user_role'];
@@ -27,7 +41,13 @@ class DashboardController extends Controller
 
         switch ($case) {
             case 'Admin':
-                $this->render('Admin/index');
+                $dashboard = [
+                    'totalUsers' => $this->totalUsers(),
+                    'totalEvents' => 0, 
+                    'pendingEvents' => [] 
+                ];
+                
+                $this->render('Admin/index', ['dashboard' => $dashboard]);
                 break;
             case 'Organisateur':
                 $this->render('Organisateur/index');

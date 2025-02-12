@@ -169,7 +169,7 @@ class Event
         $requet = "SELECT * FROM events";
         $stmt = Database::getInstance()->prepare($requet);
         $stmt->execute();
-        $events = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
      return $events ? $events : [];
     }
 
@@ -218,6 +218,9 @@ class Event
                 ':id_user' => $id_user,
             ]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function CountEvent(){
+        
     }
     
 

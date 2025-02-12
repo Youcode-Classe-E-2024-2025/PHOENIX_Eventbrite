@@ -172,7 +172,16 @@ class Event
         $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
      return $events ? $events : [];
     }
-        
+
+    public static function getPendingEvent()
+    {
+        $requet = "SELECT COUNT(*) as count from events where status = 'En attente'";
+        $stmt = Database::getInstance()->prepare($requet);
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+
     public function addEvent()
     {
         $requet = "INSERT INTO event (name, description, date, location, price, capacity, organizer_id, status, category_id, created_at, updated_at) VALUES (:name,:description,:date,:location,:price,:capacity,:organizer_id,:status,:category_id,:created_at,:updated_at)";
@@ -210,15 +219,17 @@ class Event
         ]);
         return $event['name'];
     }
-    public function searchEvent() {}
-    public function SelectEventPraticiper($id_user){
-            $requet = "SELECT e.title , e.description , e.location, e.status, e.category_id ,e.status  FROM events AS e JOIN reservations AS c ON c.event_id = e.id where c.user_id = :id_user";
-            $stmt = Database::getInstance()->prepare($requet);
-            $stmt->execute([
-                ':id_user' => $id_user,
-            ]);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+
+
+
+    // public function SelectEventPraticiper($id_user){
+    //         $requet = "SELECT e.title , e.description , e.location, e.status, e.category_id ,e.status  FROM events AS e JOIN reservations AS c ON c.event_id = e.id where c.user_id = :id_user";
+    //         $stmt = Database::getInstance()->prepare($requet);
+    //         $stmt->execute([
+    //             ':id_user' => $id_user,
+    //         ]);
+    //         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // }
   
 
 

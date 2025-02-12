@@ -23,6 +23,13 @@ class DashboardController extends Controller
     }
 
 
+ 
+    public function AffichageDesEventes()
+    {
+        $events = Event::findAllEvent();
+        return $events;
+    }
+
 
     public function totalUsers()
     {
@@ -30,6 +37,12 @@ class DashboardController extends Controller
         $totalUsers = count($users);
 
         return $totalUsers;
+    }
+
+    public function PendingEvent()
+    {
+        $events = Event::getPendingEvent();
+        return $events;
     }
     public function TotalEvent()
     {
@@ -42,17 +55,13 @@ class DashboardController extends Controller
     public function dashboard()
     {
         $case = $_SESSION['user_role'];
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
-
         switch ($case) {
             case 'Admin':
                 $dashboard = [
                     'totalUsers' => $this->totalUsers(),
                     'totalEvents' => $this->TotalEvent(),
-                    'pendingEvents' => []
+                    'pendingEvents' => $this->PendingEvent()
                 ];
-
                 $this->render('Admin/index', ['dashboard' => $dashboard]);
                 break;
             case 'Organisateur':
@@ -63,4 +72,6 @@ class DashboardController extends Controller
                 break;
         }
     }
+
+
 }

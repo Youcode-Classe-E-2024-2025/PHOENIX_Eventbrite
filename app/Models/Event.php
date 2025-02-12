@@ -220,22 +220,18 @@ class Event
         return $event['name'];
     }
 
-    public static function ticketSold($id_event)
+    public static function ticketSold()
     {
-        $requet = "SELECT COUNT(*) as count FROM reservations WHERE event_id = :id_event";
+        $requet = "SELECT sum(quantity) as quantity FROM reservations";
         $stmt = Database::getInstance()->prepare($requet);
-        $stmt->execute([
-            ':id_event' => $id_event,
-        ]);
+        $stmt->execute();
         return $stmt->fetchColumn();
     }
     public static function revenue($id_event)
     {
-        $requet = "SELECT SUM(price) as revenue FROM reservations WHERE event_id = :id_event";
+        $requet = "SELECT SUM(price) as revenue FROM reservations";
         $stmt = Database::getInstance()->prepare($requet);
-        $stmt->execute([
-            ':id_event' => $id_event,
-        ]);
+        $stmt->execute();
         return $stmt->fetchColumn();
     }
 }

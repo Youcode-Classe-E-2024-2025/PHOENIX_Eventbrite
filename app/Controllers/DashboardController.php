@@ -45,15 +45,15 @@ class DashboardController extends Controller
         return $events;
     }
 
-    // public function ticketSold($id_event)
-    // {
-    //     $events = Event::ticketSold($id_event);
-    //     return $events;
-    // }
-
-    public function revenue($id_event)
+    public function ticketSold()
     {
-        $events = Event::revenue($id_event);
+        $events = Event::ticketSold();
+        return $events;
+    }
+
+    public function revenue()
+    {
+        $events = Event::revenue();
         return $events;
     }
 
@@ -80,8 +80,8 @@ class DashboardController extends Controller
             case 'Organisateur':
                 $dashboard = [
                     'totalEvents' => $this->TotalEvent(),
-                    // 'ticketSold' => $this->ticketSold(),
-                    // 'revenue' => $this->revenue($id_event),
+                    'ticketSold' => $this->ticketSold(),
+                    'revenue' => $this->revenue(),
                 ];
                 var_dump($dashboard);
                 $this->render('Organisateur/index', ['dashboard' => $dashboard]);

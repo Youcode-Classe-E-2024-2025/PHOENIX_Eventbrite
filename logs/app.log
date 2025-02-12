@@ -5,3 +5,5 @@ LINE 1: count(*) as count from events where status = 'en attente'
 [2025-02-12 09:33:57] [ERROR] Route not found {"file":"\/var\/www\/html\/collab\/app\/Core\/Router.php","line":88,"trace":"#0 \/var\/www\/html\/collab\/public\/index.php(31): App\\Core\\Router->dispatch()\n#1 {main}"}
 [2025-02-12 09:35:01] [ERROR] Route not found {"file":"\/var\/www\/html\/collab\/app\/Core\/Router.php","line":88,"trace":"#0 \/var\/www\/html\/collab\/public\/index.php(31): App\\Core\\Router->dispatch()\n#1 {main}"}
 [2025-02-12 09:35:08] [ERROR] Route not found {"file":"\/var\/www\/html\/collab\/app\/Core\/Router.php","line":88,"trace":"#0 \/var\/www\/html\/collab\/public\/index.php(31): App\\Core\\Router->dispatch()\n#1 {main}"}
+[2025-02-12 11:21:00] [ERROR] Route not found {"file":"\/var\/www\/html\/collab\/app\/Core\/Router.php","line":88,"trace":"#0 \/var\/www\/html\/collab\/public\/index.php(31): App\\Core\\Router->dispatch()\n#1 {main}"}
+[2025-02-12 11:21:19] [ERROR] Route not found {"file":"\/var\/www\/html\/collab\/app\/Core\/Router.php","line":88,"trace":"#0 \/var\/www\/html\/collab\/public\/index.php(31): App\\Core\\Router->dispatch()\n#1 {main}"}

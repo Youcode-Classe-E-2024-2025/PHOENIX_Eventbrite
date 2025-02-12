@@ -17,21 +17,7 @@ CREATE TABLE
 CREATE TABLE
    categories (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL);
 
-CREATE TABLE
-   events (
-      id SERIAL PRIMARY KEY,
-      title VARCHAR(255) NOT NULL,
-      description TEXT,
-      date TIMESTAMP NOT NULL,
-      location VARCHAR(255) NOT NULL,
-      price NUMERIC(10, 2),
-      capacity INT,
-      organizer_id INT REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
-      status VARCHAR(50) NOT NULL CHECK (status IN ('Actif', 'En attente', 'Terminé')),
-      category_id INT REFERENCES categories (id),
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   );
+r5r
 
 
 
@@ -160,6 +146,30 @@ VALUES
       'En attente',
       3
    );
+   INSERT INTO
+   events (
+      title,
+      description,
+      date,
+      location,
+      price,
+      capacity,
+      organizer_id,
+      status,
+      category_id
+   )
+VALUES
+   (
+      'Conférence Tech',
+      'Une conférence sur les dernières technologies.',
+      '2023-12-15 10:00:00',
+      'Paris',
+      50.00,
+      100,
+      8,
+      'Actif',
+      1
+   );
 
 INSERT INTO
    event_tags (event_id, tag_id)
@@ -195,5 +205,17 @@ VALUES
    (1, 100.00, 'Stripe', 'txn_123456789', 'Réussi'), 
    (2, 50.00, 'PayPal', 'txn_987654321', 'Réussi');
 
+INSERT INTO reservations (
+   user_id,
+   event_id,
+   ticket_type,
+   quantity,
+   total_price,
+   status
+) VALUES
+   (8, 1, 'Payant', 1, 50.00, 'Confirmé');
 
 
+SELECT e.title , e.description , e.location, e.status, e.category_id ,e.status  FROM events AS e JOIN reservations AS c ON c.event_id = e.id where c.user_id = 8;
+ALTER TABLE events
+ADD COLUMN image_url VARCHAR(255);

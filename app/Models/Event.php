@@ -211,7 +211,7 @@ class Event
         return $event['name'];
     }
     public function searchEvent() {}
-    public function SelectEventPraticiper($id_user){
+    public  function SelectEventPraticiper($id_user){
             $requet = "SELECT e.title , e.description , e.location, e.status, e.category_id ,e.status  FROM events AS e JOIN reservations AS c ON c.event_id = e.id where c.user_id = :id_user";
             $stmt = Database::getInstance()->prepare($requet);
             $stmt->execute([
@@ -219,7 +219,15 @@ class Event
             ]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-  
-
+    public static function getPaginationEvent($limit ,$offest){
+        $requet = "SELECT * FROM events ORDER BY date  LIMIT = :LIMIT OFFSET = :OFFSET";
+        $stmt =  $stmt = Database::getInstance()->prepare($requet);
+        $stmt->execute([
+            ':LIMIT' => $limit,
+            ':OFFSET' => $offest
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 }
+

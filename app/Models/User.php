@@ -110,6 +110,11 @@ class User
         $this->role = $role;
     }
 
+    public function setFullName(string $full_name): void
+    {
+        $this->full_name = $full_name;
+    }
+
     // Admin methods
     public static function findAll(): array
     {
@@ -157,8 +162,9 @@ class User
     public static function updateUser(int $id, array $data): bool
     {
         $user = self::findById($id);
+        $user->setFullName($data['full_name']);
         $user->setEmail($data['email']);
-        $user->setPassword($data['password']);
+        // $user->setPassword($data['password']);
         $user->setRole($data['role']);
         return $user->save();
     }

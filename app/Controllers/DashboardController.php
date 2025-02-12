@@ -45,21 +45,21 @@ class DashboardController extends Controller
         return $events;
     }
 
-    public function ticketSold()
+    public function ticketSoldByUserId($id_user)
     {
-        $events = Event::ticketSold();
+        $events = Event::ticketSoldByUserId($id_user);
         return $events;
     }
 
-    public function revenue()
-    {
-        $events = Event::revenue();
-        return $events;
-    }
+    // public function revenue()
+    // {
+    //     $events = Event::revenue();
+    //     return $events;
+    // }
 
     public function TotalEvent()
     {
-        $events = Event::findAllEvent();
+        $events = Event::findEventsByUserId($_SESSION['user_id']);
         $totalEvents = count($events);
         return $totalEvents;
     }
@@ -80,8 +80,8 @@ class DashboardController extends Controller
             case 'Organisateur':
                 $dashboard = [
                     'totalEvents' => $this->TotalEvent(),
-                    'ticketSold' => $this->ticketSold(),
-                    'revenue' => $this->revenue(),
+                    'ticketSold' => $this->ticketSoldByUserId($_SESSION['user_id']),
+                    // 'revenue' => $this->revenue(),
                 ];
                 var_dump($dashboard);
                 $this->render('Organisateur/index', ['dashboard' => $dashboard]);

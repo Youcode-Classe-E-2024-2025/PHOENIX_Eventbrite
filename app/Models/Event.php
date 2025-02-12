@@ -182,6 +182,23 @@ class Event
     }
 
 
+    public static function findEventsByUserId($id)
+    {
+        $requet = "SELECT * FROM events where organizer_id = :id";
+        $stmt = Database::getInstance()->prepare($requet);
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public static function ticketSoldByUserId($id)
+    {
+        $requet = "SELECT sum(quantity) as quantity FROM reservations where user_id = :id";
+        $stmt = Database::getInstance()->prepare($requet);
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetchColumn();
+    }
+
     public function addEvent()
     {
         $requet = "INSERT INTO event (name, description, date, location, price, capacity, organizer_id, status, category_id, created_at, updated_at) VALUES (:name,:description,:date,:location,:price,:capacity,:organizer_id,:status,:category_id,:created_at,:updated_at)";
@@ -220,18 +237,12 @@ class Event
         return $event['name'];
     }
 
-    public static function ticketSold()
-    {
-        $requet = "SELECT sum(quantity) as quantity FROM reservations";
-        $stmt = Database::getInstance()->prepare($requet);
-        $stmt->execute();
-        return $stmt->fetchColumn();
-    }
-    public static function revenue($id_event)
-    {
-        $requet = "SELECT SUM(price) as revenue FROM reservations";
-        $stmt = Database::getInstance()->prepare($requet);
-        $stmt->execute();
-        return $stmt->fetchColumn();
-    }
+
+    // public static function revenue()
+    // {
+    //     $requet = "SELECT SUM(quantity * price) as revenue FROM reservations";
+    //     $stmt = Database::getInstance()->prepare($requet);
+    //     $stmt->execute();
+    //     return $stmt->fetchColumn();
+    // }
 }

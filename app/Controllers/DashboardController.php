@@ -23,7 +23,7 @@ class DashboardController extends Controller
     }
 
 
- 
+
     public function AffichageDesEventes()
     {
         $events = Event::findAllEvent();
@@ -44,13 +44,26 @@ class DashboardController extends Controller
         $events = Event::getPendingEvent();
         return $events;
     }
+
+    // public function ticketSold($id_event)
+    // {
+    //     $events = Event::ticketSold($id_event);
+    //     return $events;
+    // }
+
+    public function revenue($id_event)
+    {
+        $events = Event::revenue($id_event);
+        return $events;
+    }
+
     public function TotalEvent()
     {
         $events = Event::findAllEvent();
         $totalEvents = count($events);
         return $totalEvents;
     }
-    
+
 
     public function dashboard()
     {
@@ -65,13 +78,17 @@ class DashboardController extends Controller
                 $this->render('Admin/index', ['dashboard' => $dashboard]);
                 break;
             case 'Organisateur':
-                $this->render('Organisateur/index');
+                $dashboard = [
+                    'totalEvents' => $this->TotalEvent(),
+                    // 'ticketSold' => $this->ticketSold(),
+                    // 'revenue' => $this->revenue($id_event),
+                ];
+                var_dump($dashboard);
+                $this->render('Organisateur/index', ['dashboard' => $dashboard]);
                 break;
             default:
                 $this->render('Participant/index');
                 break;
         }
     }
-
-
 }

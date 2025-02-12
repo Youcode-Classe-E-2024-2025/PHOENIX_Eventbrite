@@ -23,23 +23,23 @@ class Event
     private $tags = [];
     private $ContentVisuels = [];
 
-    
+
 
     // Constructor remains the same
     public function __construct()
     {
-        $this->id ;
+        $this->id;
         $this->name;
-        $this->description ;
+        $this->description;
         $this->date;
         $this->location;
         $this->price;
-        $this->capacity ;
-        $this->organizer_id ;
-        $this->status ;
-        $this->category_id ;
-        $this->created_at ;
-        $this->updated_at ;
+        $this->capacity;
+        $this->organizer_id;
+        $this->status;
+        $this->category_id;
+        $this->created_at;
+        $this->updated_at;
         $this->tags;
     }
     public function getId()
@@ -170,7 +170,7 @@ class Event
         $stmt = Database::getInstance()->prepare($requet);
         $stmt->execute();
         $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
-     return $events ? $events : [];
+        return $events ? $events : [];
     }
 
     public static function getPendingEvent()
@@ -220,17 +220,22 @@ class Event
         return $event['name'];
     }
 
-
-
-    // public function SelectEventPraticiper($id_user){
-    //         $requet = "SELECT e.title , e.description , e.location, e.status, e.category_id ,e.status  FROM events AS e JOIN reservations AS c ON c.event_id = e.id where c.user_id = :id_user";
-    //         $stmt = Database::getInstance()->prepare($requet);
-    //         $stmt->execute([
-    //             ':id_user' => $id_user,
-    //         ]);
-    //         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    // }
-  
-
-
+    public static function ticketSold($id_event)
+    {
+        $requet = "SELECT COUNT(*) as count FROM reservations WHERE event_id = :id_event";
+        $stmt = Database::getInstance()->prepare($requet);
+        $stmt->execute([
+            ':id_event' => $id_event,
+        ]);
+        return $stmt->fetchColumn();
+    }
+    public static function revenue($id_event)
+    {
+        $requet = "SELECT SUM(price) as revenue FROM reservations WHERE event_id = :id_event";
+        $stmt = Database::getInstance()->prepare($requet);
+        $stmt->execute([
+            ':id_event' => $id_event,
+        ]);
+        return $stmt->fetchColumn();
+    }
 }

@@ -29,6 +29,7 @@ CREATE TABLE
       organizer_id INT REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
       status VARCHAR(50) NOT NULL CHECK (status IN ('Actif', 'En attente', 'Terminé')),
       category_id INT REFERENCES categories (id),
+      image_url VARCHAR(255),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
    );

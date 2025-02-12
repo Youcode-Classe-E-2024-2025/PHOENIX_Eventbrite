@@ -1,0 +1,62 @@
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="editUserModalLabel">Modifier l'utilisateur</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editUserForm" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Nouveau mot de passe</label>
+                        <input type="password" class="form-control" id="password" name="password" 
+                               placeholder="Laisser vide pour ne pas modifier">
+                    </div>
+                    <div class="mb-3">
+                        <label for="role" class="form-label">Rôle</label>
+                        <select class="form-select" id="role" name="role" required>
+                            <option value="user">Utilisateur</option>
+                            <option value="admin">Administrateur</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const editButtons = document.querySelectorAll('.btn-warning');
+    const editUserModal = document.getElementById('editUserModal');
+    const editUserForm = document.getElementById('editUserForm');
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const userId = this.getAttribute('href').split('/').pop();
+            editUserForm.action = `/admin/edit-user/${userId}`;
+            
+            // Here you would typically fetch user data and populate the form
+            fetch(`/admin/edit-user/${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('email').value = data.email;
+                    document.getElementById('role').value = data.role;
+                });
+
+            const modal = new bootstrap.Modal(editUserModal);
+            modal.show();
+        });
+    });
+});
+</script>

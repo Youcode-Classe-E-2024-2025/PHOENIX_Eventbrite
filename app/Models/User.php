@@ -132,26 +132,35 @@ class User
         return $stmt->execute([$id]);
     }
 
-    public static function update(int $id, array $data): bool
+    // public static function update(int $id, array $data): bool
+    // {
+    //     $db = Database::getInstance();
+    //     $updates = [];
+    //     $values = [];
+
+    //     foreach ($data as $key => $value) {
+    //         if ($key === 'password') {
+    //             $updates[] = "password = ?";
+    //             $values[] = Security::hashPassword($value);
+    //         } else {
+    //             $updates[] = "$key = ?";
+    //             $values[] = $value;
+    //         }
+    //     }
+
+    //     $values[] = $id;
+    //     $sql = "UPDATE users SET " . implode(", ", $updates) . " WHERE id = ?";
+    //     $stmt = $db->prepare($sql);
+    //     return $stmt->execute($values);
+    // }
+
+    public static function updateUser(int $id, array $data): bool
     {
-        $db = Database::getInstance();
-        $updates = [];
-        $values = [];
-
-        foreach ($data as $key => $value) {
-            if ($key === 'password') {
-                $updates[] = "password = ?";
-                $values[] = Security::hashPassword($value);
-            } else {
-                $updates[] = "$key = ?";
-                $values[] = $value;
-            }
-        }
-
-        $values[] = $id;
-        $sql = "UPDATE users SET " . implode(", ", $updates) . " WHERE id = ?";
-        $stmt = $db->prepare($sql);
-        return $stmt->execute($values);
+        $user = self::findById($id);
+        $user->setEmail($data['email']);
+        $user->setPassword($data['password']);
+        $user->setRole($data['role']);
+        return $user->save();
     }
 
     public static function create(array $data): bool

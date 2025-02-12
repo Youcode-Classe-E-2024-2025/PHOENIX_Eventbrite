@@ -3,16 +3,22 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
-use App\Core\Security;
 use App\Core\Validator;
 use App\Models\User;
 
-class AdminController extends Controller  // Changed from AuthController to Controller
+class AdminController extends Controller
 {
-    public function __construct()
+    public function UpdateUser()
     {
-        parent::__construct();
-    }
-
-    
+        if ($_SERVER['REQUEST_METHOD'] !== 'get') {
+            return $this->render('Admin/edit-user');
+        }else{
+            return $this->render('Admin/edit-user', [
+                'id' => $_GET['id'],
+                'user' => User::findById($_GET['id']),
+                'roles' => User::getRoleById($_GET['id']),
+                'emails' => User::getEmailById($_GET['id']),
+            ]);
+        }
+    }       
 }

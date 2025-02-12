@@ -16,3 +16,5 @@ $router->get('/logout', [AuthController::class, 'logout']);
 $router->get('/dashboard', [DashboardController::class, 'dashboard']);
 $router->get('/edit-user/:id', [AdminController::class, 'UpdateUser']);
 $router->post('/edit-user/:id', [AdminController::class, 'UpdateUser']);
+$router->post('/ban-user/:id', [AdminController::class, 'DeleteUser']);
+

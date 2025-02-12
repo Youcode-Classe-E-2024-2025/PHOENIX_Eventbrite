@@ -32,4 +32,16 @@ class AdminController extends Controller
         $this->redirect('/dashboard');
     }
 }    
+
+    public function DeleteUser()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_SERVER['REQUEST_URI'];
+            $id = explode('/', $id);
+            $id = end($id);
+            var_dump($id);
+            User::delete($id);
+            $this->redirect('/dashboard');
+        }
+    }
 }

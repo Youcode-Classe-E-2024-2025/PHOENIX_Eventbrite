@@ -47,6 +47,7 @@ class User
     }
 }
 
+    
     public static function findByEmail(string $email): ?self
     {
         $db = Database::getInstance();

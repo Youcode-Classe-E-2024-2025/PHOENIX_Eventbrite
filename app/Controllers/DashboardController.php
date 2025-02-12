@@ -3,17 +3,18 @@
 namespace App\Controllers;
 
 use App\Models\User;
+use App\Models\Event;
 
 use App\Core\Controller;
-use App\Models\Event;
 
 class DashboardController extends Controller
 {
-    private Event $Event;
+    private $Event;
 
-    // public function __construct(){
-    //     $this->Event; 
-    // }
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
 
     public function AffichageEventsPracipant($id_user)
@@ -24,14 +25,19 @@ class DashboardController extends Controller
 
 
     public function totalUsers()
-{
-    $users = User::findAll();
-    $totalUsers = count($users);
+    {
+        $users = User::findAll();
+        $totalUsers = count($users);
+
+        return $totalUsers;
+    }
+    public function TotalEvent()
+    {
+        $events = Event::findAllEvent();
+        $totalEvents = count($events);
+        return $totalEvents;
+    }
     
-    return $totalUsers;
-}
-
-
 
     public function dashboard()
     {
@@ -43,10 +49,10 @@ class DashboardController extends Controller
             case 'Admin':
                 $dashboard = [
                     'totalUsers' => $this->totalUsers(),
-                    'totalEvents' => 0, 
-                    'pendingEvents' => [] 
+                    'totalEvents' => $this->TotalEvent(),
+                    'pendingEvents' => []
                 ];
-                
+
                 $this->render('Admin/index', ['dashboard' => $dashboard]);
                 break;
             case 'Organisateur':

@@ -164,7 +164,7 @@ class Event
 
 
 
-    public function AffichageDesEventes()
+    public static function findAllEvent()
     {
         $requet = "SELECT * FROM events";
         $stmt = Database::getInstance()->prepare($requet);
@@ -172,8 +172,8 @@ class Event
         $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
      return $events ? $events : [];
     }
-
-    public function AjouterEvent()
+        
+    public function addEvent()
     {
         $requet = "INSERT INTO event (name, description, date, location, price, capacity, organizer_id, status, category_id, created_at, updated_at) VALUES (:name,:description,:date,:location,:price,:capacity,:organizer_id,:status,:category_id,:created_at,:updated_at)";
         $stmt = Database::getInstance()->prepare($requet);
@@ -191,7 +191,7 @@ class Event
             'updated_at' => $this->updated_at
         ]);
     }
-    public function SelectEvent($id)
+    public function selectEventById($id)
     {
         $requet = "SELECT * FROM events WHERE id = :id";
         $stmt = Database::getInstance()->prepare($requet);
@@ -200,9 +200,9 @@ class Event
     }
 
 
-    public function SupprimerEvent($id_event)
+    public function deleteEvent($id_event)
     {
-        $event = $this->SelectEvent($id_event);
+        $event = $this->SelectEventById($id_event);
         $requet = "DELETE FROM events where id = :id";
         $stmt = Database::getInstance()->prepare($requet);
         $stmt->execute([
@@ -210,7 +210,7 @@ class Event
         ]);
         return $event['name'];
     }
-    public function RechercherEvent() {}
+    public function searchEvent() {}
     public function SelectEventPraticiper($id_user){
             $requet = "SELECT e.title , e.description , e.location, e.status, e.category_id ,e.status  FROM events AS e JOIN reservations AS c ON c.event_id = e.id where c.user_id = :id_user";
             $stmt = Database::getInstance()->prepare($requet);
@@ -219,10 +219,7 @@ class Event
             ]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function CountEvent(){
-        
-    }
-    
+  
 
 
 }

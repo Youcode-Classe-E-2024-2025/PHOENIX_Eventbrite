@@ -12,6 +12,7 @@ class User
     private string $email;
     private string $password;
     private string $role;
+    private string $avatar_url;
     private string $created_at;
 
     public function __construct(array $data = [])
@@ -20,30 +21,40 @@ class User
         $this->id = $data['id'] ?? null;
         $this->full_name = $data['full_name'] ?? '';
         $this->email = $data['email'] ?? '';
-        $this->password = $data['password_hash'] ?? $data['password'] ?? ''; // Accept both keys
+        $this->password = $data['password_hash'] ?? $data['password'] ?? '';
         $this->role = $data['role'] ?? 'user';
+        $this->avatar_url = $data['avatar_url'] ?? '/images/default-avatar.png';
         $this->created_at = $data['created_at'] ?? date('Y-m-d H:i:s');
     }
 }
 
-    public function save(): bool
+public function save(): bool
 {
     $db = Database::getInstance();
 
     if ($this->id === null) {
-        $sql = "INSERT INTO users (email, password_hash, role, full_name, created_at) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO users (email, password_hash, role, full_name, avatar_url, created_at) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $db->prepare($sql);
         return $stmt->execute([
             $this->email,
-            $this->password,  // Already hashed from controller
+            $this->password,
             $this->role,
             $this->full_name,
+            $this->avatar_url,
             $this->created_at
         ]);
     } else {
-        $sql = "UPDATE users SET email = ?, password_hash = ?, role = ?, full_name = ?, created_at = ? WHERE id = ?";
+        $sql = "UPDATE users SET email = ?, password_hash = ?, role = ?, full_name = ?, avatar_url = ?, created_at = ? WHERE id = ?";
         $stmt = $db->prepare($sql);
-        return $stmt->execute([$this->email, $this->password, $this->role, $this->full_name, $this->created_at, $this->id]);
+        return $stmt->execute([
+            $this->email, 
+            $this->password, 
+            $this->role, 
+            $this->full_name, 
+            $this->avatar_url,
+            $this->created_at, 
+            $this->id
+        ]);
     }
 }
 
@@ -97,11 +108,26 @@ class User
         return $this->created_at;
     }
 
+    public function getFullName(): string
+    {
+        return $this->full_name;
+    }
+
+    public function getAvatar(): string
+    {
+        return $this->avatar_url ;
+    }
+
     // Setters
     public function setEmail(string $email): void
     {
         $this->email = $email;
     }
+
+    public function setAvatar(string $avatar_url): void
+{
+    $this->avatar_url = $avatar_url;
+}
     public function setPassword(string $password): void
     {
         $this->password = $password;

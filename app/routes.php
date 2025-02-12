@@ -11,6 +11,8 @@ $router->get('/register', [AuthController::class, 'register']);
 $router->post('/register', [AuthController::class, 'register']);
 $router->get('/logout', [AuthController::class, 'logout']);
 
+// Profile route
+$router->get('/profile', [AuthController::class, 'profile']);
 
 // Dashboard route
 $router->get('/dashboard', [DashboardController::class, 'dashboard']);

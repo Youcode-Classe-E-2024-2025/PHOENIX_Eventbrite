@@ -17,7 +17,7 @@ class AuthController extends Controller
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Validate CSRF token
+            
             if (!Security::validateCsrfToken($_POST['csrf_token'] ?? null)) {
                 return $this->json(['error' => 'Invalid CSRF token'], 403);
             }
@@ -47,7 +47,7 @@ class AuthController extends Controller
     public function register()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Validate CSRF token
+            
             if (!Security::validateCsrfToken($_POST['csrf_token'] ?? null)) {
                 return $this->json(['error' => 'Invalid CSRF token'], 403);
             }
@@ -92,18 +92,39 @@ class AuthController extends Controller
 
     public function logout()
     {
-        // Clear all session data
+        
         $_SESSION = [];
 
-        // Destroy the session cookie
+        
         if (isset($_COOKIE[session_name()])) {
             setcookie(session_name(), '', time() - 3600, '/');
         }
 
-        // Destroy the session
+        
         session_destroy();
 
-        // Redirect to login
+        
         $this->redirect('/');
     }
+
+
+    public function profile()
+{
+    
+    $userId = $_SESSION['user_id'] ?? null;
+    
+    if (!$userId) {
+        $this->redirect('/');
+    }
+
+    
+    $user = User::findById($userId);
+    
+    
+    return $this->render('Layouts/profile', [
+        'user' => $user,
+        'notifications' => [], 
+        'events' => []  
+    ]);
+}
 }

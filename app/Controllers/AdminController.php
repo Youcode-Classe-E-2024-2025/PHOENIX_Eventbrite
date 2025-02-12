@@ -9,7 +9,7 @@ use App\Models\User;
 class AdminController extends Controller
 {
     public function UpdateUser()
-{
+    {
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $id = $_SERVER['REQUEST_URI'];
         $id = explode('/', $id);
@@ -27,11 +27,10 @@ class AdminController extends Controller
             'email' => $_POST['email'],
             'role' => $_POST['role']
         ];
-        var_dump($data);
         User::updateUser($id, $data);
         $this->redirect('/dashboard');
     }
-}    
+    }    
 
     public function DeleteUser()
     {

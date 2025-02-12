@@ -30,6 +30,11 @@ class DashboardController extends Controller
         return $events;
     }
 
+    public function findAll()
+    {
+        $users = User::findAll();
+        return $users;
+    }
 
     public function totalUsers()
     {
@@ -62,7 +67,8 @@ class DashboardController extends Controller
                     'totalEvents' => $this->TotalEvent(),
                     'pendingEvents' => $this->PendingEvent()
                 ];
-                $this->render('Admin/index', ['dashboard' => $dashboard]);
+                $users = $this->findAll();
+                $this->render('Admin/index', ['dashboard' => $dashboard, 'users' => $users]);
                 break;
             case 'Organisateur':
                 $this->render('Organisateur/index');

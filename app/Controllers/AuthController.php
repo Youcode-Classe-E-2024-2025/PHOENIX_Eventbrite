@@ -106,14 +106,4 @@ class AuthController extends Controller
         // Redirect to login
         $this->redirect('/');
     }
-
-
-    public function dashboard()
-    {
-        // if (!isset($_SESSION['user_id'])) {
-        //     $this->redirect('/login');
-        // }
-
-        return $this->render('/Participants/dashboard');
-    }
 }

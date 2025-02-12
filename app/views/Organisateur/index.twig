@@ -96,7 +96,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for event in events|default([]) %}
+                        {% for event in dashboard.events|default([]) %}
                         <tr>
                             <td>{{ event.title }}</td>
                             <td>{{ event.date|date('m/d/Y h:i A') }}</td>
@@ -104,8 +104,8 @@
                             <td>{{ event.tickets_sold|default(0) }}/{{ event.capacity }}</td>
                             <td>$ {{ event.price|number_format(2, '.', ',') }}</td>
                             <td>
-                                <span class="badge bg-{{ event.status == 'active' ? 'success' : (event.status == 'completed' ? 'secondary' : 'danger') }}">
-                                    {{ event.status|capitalize }}
+                                <span class="badge bg-{{ event.status == 'Actif' ? 'success' : (event.status == 'En attente' ? 'warning' : 'secondary') }}">
+                                    {{ event.status }}
                                 </span>
                             </td>
                             <td>
@@ -121,6 +121,10 @@
                                     </button>
                                 </div>
                             </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center">No events found</td>
                         </tr>
                         {% endfor %}
                     </tbody>

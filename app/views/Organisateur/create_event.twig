@@ -70,7 +70,7 @@
                         <!-- Event Image -->
                         <div class="mb-3">
                             <label for="image" class="form-label">Event Image</label>
-                            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                            <input type="url" class="form-control" id="image" name="image_url" required>
                         </div>
 
                         <!-- Status -->
@@ -97,7 +97,7 @@
 
 {% block javascripts %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+/* document.addEventListener('DOMContentLoaded', function() {
     // Set minimum date to today
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('date').min = today;
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Event date and time must be in the future');
         }
     });
-});
+}); */
 </script>
 {% endblock %}
 {% endblock %}

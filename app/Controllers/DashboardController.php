@@ -64,6 +64,11 @@ class DashboardController extends Controller
         return $totalEvents;
     }
 
+    public function getEventsByUserId()
+    {
+        $events = Event::findEventsByUserId($_SESSION['user_id']);
+        return $events;
+    }
 
     public function dashboard()
     {
@@ -82,7 +87,9 @@ class DashboardController extends Controller
                     'totalEvents' => $this->TotalEvent(),
                     'ticketSold' => $this->ticketSoldByUserId(),
                     'revenue' => $this->revenue(),
+                    'events' => $this->getEventsByUserId(),
                 ];
+                var_dump($dashboard);
                 $this->render('Organisateur/index', ['dashboard' => $dashboard]);
                 break;
             default:

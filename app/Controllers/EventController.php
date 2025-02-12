@@ -3,16 +3,16 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
-use App\Models\EventModel;
+use App\Models\Event;
 
 class EventController extends Controller
 {
-    private EventModel $eventModel;
+    private Event $eventModel;
 
     public function __construct()
     {
         parent::__construct();
-        $this->eventModel = new EventModel();
+        $this->eventModel = new Event();
     }
 
     /**
@@ -39,47 +39,72 @@ class EventController extends Controller
         }
 
         // Validation des données
-        $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
-        $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
-        $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
-        $time = filter_input(INPUT_POST, 'time', FILTER_SANITIZE_STRING);
-        $location = filter_input(INPUT_POST, 'location', FILTER_SANITIZE_STRING);
+        $title = $this->sanitizeInput($_POST['title'] ?? '');
+        $description = $this->sanitizeInput($_POST['description'] ?? '');
+        $date = $this->sanitizeInput($_POST['date'] ?? '');
+        $time = $this->sanitizeInput($_POST['time'] ?? '');
+        $location = $this->sanitizeInput($_POST['location'] ?? '');
         $capacity = filter_input(INPUT_POST, 'capacity', FILTER_VALIDATE_INT);
         $price = filter_input(INPUT_POST, 'price', FILTER_VALIDATE_FLOAT);
-        $category = filter_input(INPUT_POST, 'category', FILTER_SANITIZE_STRING);
-        $status = filter_input(INPUT_POST, 'status', FILTER_SANITIZE_STRING);
-        $imageUrl = filter_input(INPUT_POST, 'image', FILTER_VALIDATE_URL);
+        $category = $this->sanitizeInput($_POST['category'] ?? '');
+        $status = $this->sanitizeInput($_POST['status'] ?? '');
+        $imageUrl = filter_input(INPUT_POST, 'image_url', FILTER_VALIDATE_URL);
 
         // Validation de base
         if (!$title || !$description || !$date || !$time || !$location || 
             !$capacity || !$price || !$category || !$status || !$imageUrl) {
             $_SESSION['error'] = 'All fields are required and must be valid';
             echo $_SESSION['error'];
+            $this->render('Organisateur/create_event', [
+                'title' => $title,
+                'description' => $description,
+                'date' => $date . ' ' . $time,
+                'location' => $location,
+                'capacity' => $capacity,
+                'price' => $price,
+                'category' => $category,
+                'status' => $status,
+                'image' => $imageUrl,
+                'organizer_id' => $_SESSION['user_id']
+            ]);
             return;
         }
 
         // Création de l'événement
-        $eventData = [
-            'title' => $title,
-            'description' => $description,
-            'date' => $date . ' ' . $time,
-            'location' => $location,
-            'capacity' => $capacity,
-            'price' => $price,
-            'category' => $category,
-            'status' => $status,
-            'image' => $imageUrl,
-            'organizer_id' => $_SESSION['user_id']
-        ];
+        // $eventData = [
+        //     'title' => $title,
+        //     'description' => $description,
+        //     'date' => $date . ' ' . $time,
+        //     'location' => $location,
+        //     'capacity' => $capacity,
+        //     'price' => $price,
+        //     'category' => $category,
+        //     'status' => $status,
+        //     'image' => $imageUrl,
+        //     'organizer_id' => $_SESSION['user_id']
+        // ];
 
-        try {
-            $this->eventModel->create($eventData);
-            $_SESSION['success'] = 'Event created successfully';
-            $this->redirect('/organizer/dashboard');
-        } catch (\Exception $e) {
-            $_SESSION['error'] = 'Error creating event: ' . $e->getMessage();
-            echo $_SESSION['error'];
-        }
+        // var_dump($eventData);
+
+        $newEvent = new Event(null, $title, $description, $date . ' ' . $time, $location, $price, $capacity, $_SESSION['user_id'], $status, $category);
+        $newEvent->addEvent();
+        // try {
+        //     $this->eventModel->create($eventData);
+        //     $_SESSION['success'] = 'Event created successfully';
+        //     $this->redirect('/organizer/dashboard');
+        // } catch (\Exception $e) {
+        //     $_SESSION['error'] = 'Error creating event: ' . $e->getMessage();
+        //     echo $_SESSION['error'];
+        // }
+    }
+
+    /**
+     * Sanitize input data
+     */
+    private function sanitizeInput(string $input): string
+    {
+        $input = trim($input);
+        return htmlspecialchars($input, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
     /**

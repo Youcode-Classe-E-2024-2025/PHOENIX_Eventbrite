@@ -21,26 +21,26 @@ class Event
     private $created_at;
     private $updated_at;
     private $tags = [];
-    private $ContentVisuels = [];
-
+    // private $ContentVisuels = [];
 
 
     // Constructor remains the same
-    public function __construct()
+    public function __construct($id = '', $name = '', $description = '', $date = '', $location = '', $price = '', $capacity = '', $organizer_id = '', $status = '', $category_id = '' )
     {
-        $this->id;
-        $this->name;
-        $this->description;
-        $this->date;
-        $this->location;
-        $this->price;
-        $this->capacity;
-        $this->organizer_id;
-        $this->status;
-        $this->category_id;
-        $this->created_at;
-        $this->updated_at;
-        $this->tags;
+        $this->id = $id;
+        $this->name = $name;
+        $this->description = $description;
+        $this->date = $date;
+        $this->location = $location;
+        $this->price = $price;
+        $this->capacity = $capacity;
+        $this->organizer_id = $organizer_id;
+        $this->status = $status;
+        $this->category_id = $category_id;
+        // $this->created_at = $created_at;
+        // $this->updated_at = $updated_at;
+        // $this->tags = $tags;
+        // $this->ContentVisuels = $ContentVisuels;
     }
     public function getId()
     {
@@ -209,10 +209,11 @@ class Event
 
     public function addEvent()
     {
-        $requet = "INSERT INTO event (name, description, date, location, price, capacity, organizer_id, status, category_id, created_at, updated_at) VALUES (:name,:description,:date,:location,:price,:capacity,:organizer_id,:status,:category_id,:created_at,:updated_at)";
+        $requet = "INSERT INTO events (title, description, date, location, price, capacity, organizer_id, status, category_id, created_at, updated_at) 
+                   VALUES (:title, :description, :date, :location, :price, :capacity, :organizer_id, :status, :category_id, NOW(), NOW())";
         $stmt = Database::getInstance()->prepare($requet);
         return $stmt->execute([
-            'name' => $this->name,
+            'title' => $this->name,
             'description' => $this->description,
             'date' => $this->date,
             'location' => $this->location,
@@ -220,11 +221,10 @@ class Event
             'capacity' => $this->capacity,
             'organizer_id' => $this->organizer_id,
             'status' => $this->status,
-            'category_id' => $this->category_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at
+            'category_id' => $this->category_id
         ]);
     }
+
     public function selectEventById($id)
     {
         $requet = "SELECT * FROM events WHERE id = :id";

@@ -63,7 +63,7 @@ class AuthController extends Controller
                 if (!User::findByEmail($_POST['email'])) {
                     $user = new User([
                         'email' => $_POST['email'],
-                        'password' => $_POST['password'],
+                        'password' => Security::hashPassword($_POST['password']),
                         'role' => $_POST['role'],
                         'full_name' => $_POST['first_name'] . ' ' . $_POST['last_name']
                     ]);
@@ -72,7 +72,7 @@ class AuthController extends Controller
                         $_SESSION['user_id'] = $user->getId();
                         $_SESSION['user_role'] = $user->getRole();
 
-                        $this->redirect('/dashboard');
+                        $this->redirect('/');
                     }
 
                     $error = 'Error creating account';

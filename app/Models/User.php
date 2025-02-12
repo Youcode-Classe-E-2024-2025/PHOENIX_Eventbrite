@@ -15,37 +15,37 @@ class User
     private string $created_at;
 
     public function __construct(array $data = [])
-    {
-        if (!empty($data)) {
-            $this->id = $data['id'] ?? null;
-            $this->full_name = $data['full_name'] ?? '';
-            $this->email = $data['email'] ?? '';
-            $this->password = $data['password_hash'] ?? '';
-            $this->role = $data['role'] ?? 'user';
-            $this->created_at = $data['created_at'] ?? date('Y-m-d H:i:s');
-        }
+{
+    if (!empty($data)) {
+        $this->id = $data['id'] ?? null;
+        $this->full_name = $data['full_name'] ?? '';
+        $this->email = $data['email'] ?? '';
+        $this->password = $data['password_hash'] ?? $data['password'] ?? ''; // Accept both keys
+        $this->role = $data['role'] ?? 'user';
+        $this->created_at = $data['created_at'] ?? date('Y-m-d H:i:s');
     }
+}
 
     public function save(): bool
-    {
-        $db = Database::getInstance();
+{
+    $db = Database::getInstance();
 
-        if ($this->id === null) {
-            $sql = "INSERT INTO users (email, password_hash, role, full_name, created_at) VALUES (?, ?, ?, ?, ?)";
-            $stmt = $db->prepare($sql);
-            return $stmt->execute([
-                $this->email,
-                Security::hashPassword($this->password),
-                $this->role,
-                $this->full_name,
-                $this->created_at
-            ]);
-        } else {
-            $sql = "UPDATE users SET email = ?, password = ?, role = ?, full_name = ?, created_at = ? WHERE id = ?";
-            $stmt = $db->prepare($sql);
-            return $stmt->execute([$this->email, Security::hashPassword($this->password), $this->role, $this->full_name, $this->created_at, $this->id]);
-        }
+    if ($this->id === null) {
+        $sql = "INSERT INTO users (email, password_hash, role, full_name, created_at) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $db->prepare($sql);
+        return $stmt->execute([
+            $this->email,
+            $this->password,  // Already hashed from controller
+            $this->role,
+            $this->full_name,
+            $this->created_at
+        ]);
+    } else {
+        $sql = "UPDATE users SET email = ?, password_hash = ?, role = ?, full_name = ?, created_at = ? WHERE id = ?";
+        $stmt = $db->prepare($sql);
+        return $stmt->execute([$this->email, $this->password, $this->role, $this->full_name, $this->created_at, $this->id]);
     }
+}
 
     public static function findByEmail(string $email): ?self
     {

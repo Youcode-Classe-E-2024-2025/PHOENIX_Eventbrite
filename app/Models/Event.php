@@ -149,7 +149,7 @@ class Event
     }
     public static function getPaginationEvent($limit, $offest)
     {
-        $requet = "SELECT * FROM events ORDER BY date  LIMIT = :LIMIT OFFSET = :OFFSET";
+        $requet = "SELECT * FROM events ORDER BY date LIMIT :LIMIT OFFSET :OFFSET";
         $stmt =  $stmt = Database::getInstance()->prepare($requet);
         $stmt->execute([
             ':LIMIT' => $limit,

@@ -34,7 +34,7 @@ use PHPUnit\Framework\Constraint\Count;
             $events = Event::getPaginationEvent($limit, $offset);
             $totalEvents = count($this->findAllEvent());
             $totalPages = ceil($totalEvents / $limit);
-            $this->json([
+         return json_encode([
                 'events' => $events,
                 'currentPage' => (int)$page,
                 'totalPages' => $totalPages,
@@ -44,7 +44,14 @@ use PHPUnit\Framework\Constraint\Count;
         
         public function EventsPagination($page) {
             $events = $this->getPaginationEvent($page); 
-            $this->render('Participant/events', ['events' => $events]);
+            $page = $events['currentPage'];
+            $totalPages = $events['totalEvents'];
+            $totalEvents = $events['totalEvents'];
+            var_dump($page);
+            if (!$events['events']){
+                throw new \Exception('Event not found', 404);
+            }
+            $this->render('Participant/events', ['events' => $events['events'] , 'page'=> $page , 'totalEvents'=>$totalPages , 'totalEvents' =>$totalEvents]);
         }
 
      public function AccederEvent($id)
@@ -58,19 +65,9 @@ use PHPUnit\Framework\Constraint\Count;
 
 }
 public function faireUneReservation($id_user,$id_event,$ticket_type,$quantity,$total_price,){
-    $event = Event::selectEventById($id_event); 
-  switch ($ticket_type) {
-    case 'Gratuit':     
-        for ($i = 0; $i < $quantity; $i++) { Reservation::ajouterReservation($id_user, $id_event); }
 
-        break;
-    case 'Payant' : 
-        
-    default:
-        # code...
-        break;
-  }
 }
+
 
     }
 

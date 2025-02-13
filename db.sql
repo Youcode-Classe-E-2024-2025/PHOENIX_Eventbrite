@@ -15,18 +15,12 @@ CREATE TABLE
    );
    INSERT INTO users (email, password_hash, role, avatar_url, full_name) 
 VALUES ('admin@example.com', '$argon2id$v=19$m=65536,t=4,p=1$RnBjTzRnalZlVHV3M08ySg$cyqnuIyDXw8PLbCcyrhcn4jLqo+pX8KX54uVT3gCZQw', 'Admin', 'url_avatar_here', 'Admin User');
-UPDATE users
-SET id = 1 , updated_at = CURRENT_TIMESTAMP
-WHERE email = 'admin@phoenix.com';
-
 
 CREATE TABLE
    categories (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL);
 
-<<<<<<< HEAD
-r5r
-=======
-CREATE TABLE
+
+CREATE TABLE  
    events (
       id SERIAL PRIMARY KEY,
       title VARCHAR(255) NOT NULL,
@@ -42,7 +36,6 @@ CREATE TABLE
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
    );
->>>>>>> feature/events_crud
 
 
 

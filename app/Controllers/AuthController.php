@@ -17,7 +17,7 @@ class AuthController extends Controller
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Validate CSRF token
+            
             if (!Security::validateCsrfToken($_POST['csrf_token'] ?? null)) {
                 return $this->json(['error' => 'Invalid CSRF token'], 403);
             }
@@ -47,7 +47,7 @@ class AuthController extends Controller
     public function register()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Validate CSRF token
+            
             if (!Security::validateCsrfToken($_POST['csrf_token'] ?? null)) {
                 return $this->json(['error' => 'Invalid CSRF token'], 403);
             }
@@ -63,7 +63,7 @@ class AuthController extends Controller
                 if (!User::findByEmail($_POST['email'])) {
                     $user = new User([
                         'email' => $_POST['email'],
-                        'password' => $_POST['password'],
+                        'password' => Security::hashPassword($_POST['password']),
                         'role' => $_POST['role'],
                         'full_name' => $_POST['first_name'] . ' ' . $_POST['last_name']
                     ]);
@@ -72,7 +72,7 @@ class AuthController extends Controller
                         $_SESSION['user_id'] = $user->getId();
                         $_SESSION['user_role'] = $user->getRole();
 
-                        $this->redirect('/dashboard');
+                        $this->redirect('/');
                     }
 
                     $error = 'Error creating account';
@@ -92,28 +92,39 @@ class AuthController extends Controller
 
     public function logout()
     {
-        // Clear all session data
+        
         $_SESSION = [];
 
-        // Destroy the session cookie
+        
         if (isset($_COOKIE[session_name()])) {
             setcookie(session_name(), '', time() - 3600, '/');
         }
 
-        // Destroy the session
+        
         session_destroy();
 
-        // Redirect to login
+        
         $this->redirect('/');
     }
 
 
-    public function dashboard()
-    {
-        // if (!isset($_SESSION['user_id'])) {
-        //     $this->redirect('/login');
-        // }
-
-        return $this->render('/Participants/dashboard');
+    public function profile()
+{
+    
+    $userId = $_SESSION['user_id'] ?? null;
+    
+    if (!$userId) {
+        $this->redirect('/');
     }
+
+    
+    $user = User::findById($userId);
+    
+    
+    return $this->render('Layouts/profile', [
+        'user' => $user,
+        'notifications' => [], 
+        'events' => []  
+    ]);
+}
 }

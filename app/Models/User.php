@@ -12,41 +12,53 @@ class User
     private string $email;
     private string $password;
     private string $role;
+    private string $avatar_url;
     private string $created_at;
 
     public function __construct(array $data = [])
-    {
-        if (!empty($data)) {
-            $this->id = $data['id'] ?? null;
-            $this->full_name = $data['full_name'] ?? '';
-            $this->email = $data['email'] ?? '';
-            $this->password = $data['password_hash'] ?? '';
-            $this->role = $data['role'] ?? 'user';
-            $this->created_at = $data['created_at'] ?? date('Y-m-d H:i:s');
-        }
+{
+    if (!empty($data)) {
+        $this->id = $data['id'] ?? null;
+        $this->full_name = $data['full_name'] ?? '';
+        $this->email = $data['email'] ?? '';
+        $this->password = $data['password_hash'] ?? $data['password'] ?? '';
+        $this->role = $data['role'] ?? 'user';
+        $this->avatar_url = $data['avatar_url'] ?? '/images/default-avatar.png';
+        $this->created_at = $data['created_at'] ?? date('Y-m-d H:i:s');
     }
+}
 
-    public function save(): bool
-    {
-        $db = Database::getInstance();
+public function save(): bool
+{
+    $db = Database::getInstance();
 
-        if ($this->id === null) {
-            $sql = "INSERT INTO users (email, password_hash, role, full_name, created_at) VALUES (?, ?, ?, ?, ?)";
-            $stmt = $db->prepare($sql);
-            return $stmt->execute([
-                $this->email,
-                Security::hashPassword($this->password),
-                $this->role,
-                $this->full_name,
-                $this->created_at
-            ]);
-        } else {
-            $sql = "UPDATE users SET email = ?, password = ?, role = ?, full_name = ?, created_at = ? WHERE id = ?";
-            $stmt = $db->prepare($sql);
-            return $stmt->execute([$this->email, Security::hashPassword($this->password), $this->role, $this->full_name, $this->created_at, $this->id]);
-        }
+    if ($this->id === null) {
+        $sql = "INSERT INTO users (email, password_hash, role, full_name, avatar_url, created_at) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = $db->prepare($sql);
+        return $stmt->execute([
+            $this->email,
+            $this->password,
+            $this->role,
+            $this->full_name,
+            $this->avatar_url,
+            $this->created_at
+        ]);
+    } else {
+        $sql = "UPDATE users SET email = ?, password_hash = ?, role = ?, full_name = ?, avatar_url = ?, created_at = ? WHERE id = ?";
+        $stmt = $db->prepare($sql);
+        return $stmt->execute([
+            $this->email, 
+            $this->password, 
+            $this->role, 
+            $this->full_name, 
+            $this->avatar_url,
+            $this->created_at, 
+            $this->id
+        ]);
     }
+}
 
+    
     public static function findByEmail(string $email): ?self
     {
         $db = Database::getInstance();
@@ -96,11 +108,26 @@ class User
         return $this->created_at;
     }
 
+    public function getFullName(): string
+    {
+        return $this->full_name;
+    }
+
+    public function getAvatar(): string
+    {
+        return $this->avatar_url ;
+    }
+
     // Setters
     public function setEmail(string $email): void
     {
         $this->email = $email;
     }
+
+    public function setAvatar(string $avatar_url): void
+{
+    $this->avatar_url = $avatar_url;
+}
     public function setPassword(string $password): void
     {
         $this->password = $password;
@@ -108,6 +135,11 @@ class User
     public function setRole(string $role): void
     {
         $this->role = $role;
+    }
+
+    public function setFullName(string $full_name): void
+    {
+        $this->full_name = $full_name;
     }
 
     // Admin methods
@@ -132,26 +164,36 @@ class User
         return $stmt->execute([$id]);
     }
 
-    public static function update(int $id, array $data): bool
+    // public static function update(int $id, array $data): bool
+    // {
+    //     $db = Database::getInstance();
+    //     $updates = [];
+    //     $values = [];
+
+    //     foreach ($data as $key => $value) {
+    //         if ($key === 'password') {
+    //             $updates[] = "password = ?";
+    //             $values[] = Security::hashPassword($value);
+    //         } else {
+    //             $updates[] = "$key = ?";
+    //             $values[] = $value;
+    //         }
+    //     }
+
+    //     $values[] = $id;
+    //     $sql = "UPDATE users SET " . implode(", ", $updates) . " WHERE id = ?";
+    //     $stmt = $db->prepare($sql);
+    //     return $stmt->execute($values);
+    // }
+
+    public static function updateUser(int $id, array $data): bool
     {
-        $db = Database::getInstance();
-        $updates = [];
-        $values = [];
-
-        foreach ($data as $key => $value) {
-            if ($key === 'password') {
-                $updates[] = "password = ?";
-                $values[] = Security::hashPassword($value);
-            } else {
-                $updates[] = "$key = ?";
-                $values[] = $value;
-            }
-        }
-
-        $values[] = $id;
-        $sql = "UPDATE users SET " . implode(", ", $updates) . " WHERE id = ?";
-        $stmt = $db->prepare($sql);
-        return $stmt->execute($values);
+        $user = self::findById($id);
+        $user->setFullName($data['full_name']);
+        $user->setEmail($data['email']);
+        // $user->setPassword($data['password']);
+        $user->setRole($data['role']);
+        return $user->save();
     }
 
     public static function create(array $data): bool

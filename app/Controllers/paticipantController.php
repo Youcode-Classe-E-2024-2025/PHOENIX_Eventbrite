@@ -37,12 +37,12 @@ class PaticipantController extends Controller
         $events = Event::getPaginationEvent($limit, $offset);
         $totalEvents = count($this->findAllEvent());
         $totalPages = ceil($totalEvents / $limit);
-        return json_encode([
+        return [
             'events' => $events,
             'currentPage' => (int)$page,
             'totalPages' => $totalPages,
             'totalEvents' => $totalEvents
-        ]);
+        ];
     }
 
     public function EventsPagination($page)
@@ -67,5 +67,5 @@ class PaticipantController extends Controller
 
         $this->render('Participant/event_detail', ['event' => $event, 'id' => $id]);
     }
-    public function faireUneReservation($id_user, $id_event, $ticket_type, $quantity, $total_price,) {}
+    
 }

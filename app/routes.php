@@ -5,6 +5,7 @@ use App\Controllers\DashboardController;
 use App\Controllers\AdminController;
 use App\Controllers\PaticipantController;
 use App\Controllers\EventController;
+use App\Controllers\ReservationController;
 
 // Home route
 $router->get('/', [AuthController::class, 'login']);
@@ -18,15 +19,13 @@ $router->get('/profile', [AuthController::class, 'profile']);
 
 // Dashboard route
 $router->get('/dashboard', [DashboardController::class, 'dashboard']);
-// $router->get('/events',[PaticipantController::class, 'EventsPagination']);
 $router->get('/events/:page', [PaticipantController::class, 'EventsPagination']);
 $router->get('/event_detail/:id', [PaticipantController::class, 'AccederEvent']);
 
 
 //participant route 
-// $router->get('/events',handler: [PaticipantController::class],'findAllEvent');
-
 // $router->get('/admin/events', [AdminController::class, 'totalEvents']);
+$router->get('/resevation/:id', [ReservationController::class, 'ajouterReservation']);
 // $router->get('/admin/events/pending', [AdminController::class, 'pendingEvents']);
 $router->get('/edit-user/:id', [AdminController::class, 'UpdateUser']);
 $router->post('/edit-user/:id', [AdminController::class, 'UpdateUser']);

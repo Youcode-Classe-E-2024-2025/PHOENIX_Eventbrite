@@ -1,2 +1,2 @@
 
-var = new XMLHttpRequest();
+fucntion

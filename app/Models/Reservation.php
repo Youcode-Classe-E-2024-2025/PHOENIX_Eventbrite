@@ -16,23 +16,27 @@ class Reservation
     private string $status; 
     private $created_at;
 
-    public static function ajouterResevation(int $event_id, int $user_id): bool
+  
+  
+    public static function ajouterReservation(int $event_id, int $user_id, string $ticket_type, int $quantity, float $total_price): bool
     {
         $requet = "INSERT INTO reservations (user_id, event_id, ticket_type, quantity, total_price, status, created_at, updated_at) 
-              VALUES (:user_id, :event_id, :ticket_type, :quantity, :total_price, 'Confirmé', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
-        $stmt = Database::getInstance()->prepare($requet);    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+                   VALUES (:user_id, :event_id, :ticket_type, :quantity, :total_price, 'Confirmé', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+        
+        $stmt = Database::getInstance()->prepare($requet);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
         $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
         $stmt->bindParam(':ticket_type', $ticket_type, PDO::PARAM_STR);
         $stmt->bindParam(':quantity', $quantity, PDO::PARAM_INT);
-        $stmt->bindParam(':total_price', $total_price, PDO::PARAM_STR); 
-    try {
-        $stmt->execute();
-        return true;
-    } catch (PDOException $e) {
-        echo "Erreur : " . $e->getMessage();
-        return false;
+        $stmt->bindParam(':total_price', $total_price, PDO::PARAM_STR);
 
-    }
+        try {
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            echo "Erreur : " . $e->getMessage();
+            return false;
+        }
     }
     
     
@@ -41,6 +45,3 @@ class Reservation
 
 
 
-
-
-?>

@@ -24,12 +24,26 @@ class DashboardController extends Controller
         $events  = $this->Event->SelectEventPraticiper($id_user);
         return $events ;
     }
+
+
+
+    public function AffichageDesEventes()
+    {
+        $events = Event::findAllEvent();
+        return $events;
+    }
+
     public function TotalEventParticper($id_user)
     {
         $events = $this->AffichageEventsParticipant($id_user);
         return count($events);
     }
     
+    public function findAll()
+    {
+        $users = User::findAll();
+        return $users;
+    }
 
     public function totalUsers()
     {
@@ -38,14 +52,38 @@ class DashboardController extends Controller
 
         return $totalUsers;
     }
+
+    public function PendingEvent()
+    {
+        $events = Event::getPendingEvent();
+        return $events;
+    }
+
+    public function ticketSoldByUserId()
+    {
+        $events = Event::ticketSoldByUserId($_SESSION['user_id']);
+        return $events;
+    }
+
+    public function revenue()
+    {
+        $events = Event::revenue($_SESSION['user_id']);
+        return $events;
+    }
+
     public function TotalEvent()
     {
-        $events = Event::findAllEvent();
+        $events = Event::findEventsByUserId($_SESSION['user_id']);
         $totalEvents = count($events);
         return $totalEvents;
     }
 
 
+    public function getEventsByUserId()
+    {
+        $events = Event::findEventsByUserId($_SESSION['user_id']);
+        return $events;
+    }
 
     public function dashboard()
     {
@@ -59,14 +97,23 @@ class DashboardController extends Controller
                 $dashboard = [
                     'totalUsers' => $this->totalUsers(),
                     'totalEvents' => $this->TotalEvent(),
-                    'pendingEvents' => []
+                    'pendingEvents' => $this->PendingEvent()
                 ];
 
 
-                $this->render('Admin/index', ['dashboard' => $dashboard]);
+                // $this->render('Admin/index', ['dashboard' => $dashboard]);
+                $users = $this->findAll();
+                $this->render('Admin/index', ['dashboard' => $dashboard, 'users' => $users]);
                 break;
             case 'Organisateur':
-                $this->render('Organisateur/index');
+                $dashboard = [
+                    'totalEvents' => $this->TotalEvent(),
+                    'ticketSold' => $this->ticketSoldByUserId(),
+                    'revenue' => $this->revenue(),
+                    'events' => $this->getEventsByUserId(),
+                ];
+                var_dump($dashboard);
+                $this->render('Organisateur/index', ['dashboard' => $dashboard]);
                 break;
                 default:
                 $eventsParticipe = $this->AffichageEventsParticipant($user);

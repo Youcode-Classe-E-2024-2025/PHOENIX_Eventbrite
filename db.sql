@@ -13,11 +13,36 @@ CREATE TABLE
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
    );
+   INSERT INTO users (email, password_hash, role, avatar_url, full_name) 
+VALUES ('admin@example.com', '$argon2id$v=19$m=65536,t=4,p=1$RnBjTzRnalZlVHV3M08ySg$cyqnuIyDXw8PLbCcyrhcn4jLqo+pX8KX54uVT3gCZQw', 'Admin', 'url_avatar_here', 'Admin User');
+UPDATE users
+SET id = 1 , updated_at = CURRENT_TIMESTAMP
+WHERE email = 'admin@phoenix.com';
+
 
 CREATE TABLE
    categories (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL);
 
+<<<<<<< HEAD
 r5r
+=======
+CREATE TABLE
+   events (
+      id SERIAL PRIMARY KEY,
+      title VARCHAR(255) NOT NULL,
+      description TEXT,
+      date TIMESTAMP NOT NULL,
+      location VARCHAR(255) NOT NULL,
+      price NUMERIC(10, 2),
+      capacity INT,
+      organizer_id INT REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+      status VARCHAR(50) NOT NULL CHECK (status IN ('Actif', 'En attente', 'Terminé')),
+      category_id INT REFERENCES categories (id),
+      image_url VARCHAR(255),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   );
+>>>>>>> feature/events_crud
 
 
 

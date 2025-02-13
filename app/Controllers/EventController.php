@@ -71,20 +71,20 @@ class EventController extends Controller
         }
 
         // Création de l'événement
-        // $eventData = [
-        //     'title' => $title,
-        //     'description' => $description,
-        //     'date' => $date . ' ' . $time,
-        //     'location' => $location,
-        //     'capacity' => $capacity,
-        //     'price' => $price,
-        //     'category' => $category,
-        //     'status' => $status,
-        //     'image' => $imageUrl,
-        //     'organizer_id' => $_SESSION['user_id']
-        // ];
+        $eventData = [
+            'title' => $title,
+            'description' => $description,
+            'date' => $date . ' ' . $time,
+            'location' => $location,
+            'capacity' => $capacity,
+            'price' => $price,
+            'category' => $category,
+            'status' => $status,
+            'image' => $imageUrl,
+            'organizer_id' => $_SESSION['user_id']
+        ];
 
-        // var_dump($eventData);
+        var_dump($eventData);
 
         $newEvent = new Event(null, $title, $description, $date . ' ' . $time, $location, $price, $capacity, $_SESSION['user_id'], $status, $category);
         $newEvent->addEvent();

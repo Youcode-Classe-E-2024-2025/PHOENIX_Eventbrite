@@ -89,7 +89,7 @@ class DashboardController extends Controller
                     'revenue' => $this->revenue(),
                     'events' => $this->getEventsByUserId(),
                 ];
-                var_dump($dashboard);
+                // var_dump($dashboard);
                 $this->render('Organisateur/index', ['dashboard' => $dashboard]);
                 break;
             default:

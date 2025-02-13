@@ -56,8 +56,7 @@ use PHPUnit\Framework\Constraint\Count;
     $this->render('Participant/event_detail', ['event' => $event ,'id' => $id]);
 
 }
-
-        
+   
     }
 
 ?>

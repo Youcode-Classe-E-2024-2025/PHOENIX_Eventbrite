@@ -3,7 +3,7 @@
         'name' => 'youcode/mvc-framework',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '1e2362286a71ebdb9fda5543378d159337ddaf02',
+        'reference' => '06832a269a3818ff62186b159acbe1eda644ac69',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -337,7 +337,7 @@
         'youcode/mvc-framework' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '1e2362286a71ebdb9fda5543378d159337ddaf02',
+            'reference' => '06832a269a3818ff62186b159acbe1eda644ac69',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

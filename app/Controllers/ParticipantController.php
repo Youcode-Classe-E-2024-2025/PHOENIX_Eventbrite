@@ -72,5 +72,3 @@ public function faireUneReservation($id_user,$id_event,$ticket_type,$quantity,$t
 }
 
     }
-
-?>

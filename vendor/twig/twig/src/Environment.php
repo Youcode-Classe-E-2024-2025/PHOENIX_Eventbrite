@@ -419,540 +419,543 @@ class Environment
                      * the cache.
                      */
                     eval('?>'.$content);
-                }
+}
 
-                if (!class_exists($cls, false)) {
-                    throw new RuntimeError(\sprintf('Failed to load Twig template "%s", index "%s": cache might be corrupted.', $name, $index), -1, $source);
-                }
-            }
-        }
+if (!class_exists($cls, false)) {
+throw new RuntimeError(\sprintf('Failed to load Twig template "%s", index "%s": cache might be corrupted.', $name,
+$index), -1, $source);
+}
+}
+}
 
-        $this->extensionSet->initRuntime();
+$this->extensionSet->initRuntime();
 
-        return $this->loadedTemplates[$cls] = new $cls($this);
+return $this->loadedTemplates[$cls] = new $cls($this);
+}
+
+/**
+* Creates a template from source.
+*
+* This method should not be used as a generic way to load templates.
+*
+* @param string $template The template source
+* @param string|null $name An optional name of the template to be used in error messages
+*
+* @throws LoaderError When the template cannot be found
+* @throws SyntaxError When an error occurred during compilation
+*/
+public function createTemplate(string $template, ?string $name = null): TemplateWrapper
+{
+$hash = hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128' , $template, false); if (null !==$name) { $name=\sprintf('%s
+    (string template %s)', $name, $hash); } else { $name=\sprintf('__string_template__%s', $hash); } $loader=new
+    ChainLoader([ new ArrayLoader([$name=> $template]),
+    $current = $this->getLoader(),
+    ]);
+
+    $this->setLoader($loader);
+    try {
+    return new TemplateWrapper($this, $this->loadTemplate($this->getTemplateClass($name), $name));
+    } finally {
+    $this->setLoader($current);
+    }
     }
 
     /**
-     * Creates a template from source.
-     *
-     * This method should not be used as a generic way to load templates.
-     *
-     * @param string      $template The template source
-     * @param string|null $name     An optional name of the template to be used in error messages
-     *
-     * @throws LoaderError When the template cannot be found
-     * @throws SyntaxError When an error occurred during compilation
-     */
-    public function createTemplate(string $template, ?string $name = null): TemplateWrapper
-    {
-        $hash = hash(\PHP_VERSION_ID < 80100 ? 'sha256' : 'xxh128', $template, false);
-        if (null !== $name) {
-            $name = \sprintf('%s (string template %s)', $name, $hash);
-        } else {
-            $name = \sprintf('__string_template__%s', $hash);
-        }
-
-        $loader = new ChainLoader([
-            new ArrayLoader([$name => $template]),
-            $current = $this->getLoader(),
-        ]);
-
-        $this->setLoader($loader);
-        try {
-            return new TemplateWrapper($this, $this->loadTemplate($this->getTemplateClass($name), $name));
-        } finally {
-            $this->setLoader($current);
-        }
-    }
-
-    /**
-     * Returns true if the template is still fresh.
-     *
-     * Besides checking the loader for freshness information,
-     * this method also checks if the enabled extensions have
-     * not changed.
-     *
-     * @param int $time The last modification time of the cached template
-     */
+    * Returns true if the template is still fresh.
+    *
+    * Besides checking the loader for freshness information,
+    * this method also checks if the enabled extensions have
+    * not changed.
+    *
+    * @param int $time The last modification time of the cached template
+    */
     public function isTemplateFresh(string $name, int $time): bool
     {
-        return $this->extensionSet->getLastModified() <= $time && $this->getLoader()->isFresh($name, $time);
-    }
-
-    /**
-     * Tries to load a template consecutively from an array.
-     *
-     * Similar to load() but it also accepts instances of \Twig\TemplateWrapper
-     * and an array of templates where each is tried to be loaded.
-     *
-     * @param string|TemplateWrapper|array<string|TemplateWrapper> $names A template or an array of templates to try consecutively
-     *
-     * @throws LoaderError When none of the templates can be found
-     * @throws SyntaxError When an error occurred during compilation
-     */
-    public function resolveTemplate($names): TemplateWrapper
-    {
-        if (!\is_array($names)) {
-            return $this->load($names);
+    return $this->extensionSet->getLastModified() <= $time && $this->getLoader()->isFresh($name, $time);
         }
 
-        $count = \count($names);
-        foreach ($names as $name) {
-            if ($name instanceof Template) {
-                trigger_deprecation('twig/twig', '3.9', 'Passing a "%s" instance to "%s" is deprecated.', Template::class, __METHOD__);
+        /**
+        * Tries to load a template consecutively from an array.
+        *
+        * Similar to load() but it also accepts instances of \Twig\TemplateWrapper
+        * and an array of templates where each is tried to be loaded.
+        *
+        * @param string|TemplateWrapper|array<string|TemplateWrapper> $names A template or an array of templates to try
+            consecutively
+            *
+            * @throws LoaderError When none of the templates can be found
+            * @throws SyntaxError When an error occurred during compilation
+            */
+            public function resolveTemplate($names): TemplateWrapper
+            {
+            if (!\is_array($names)) {
+            return $this->load($names);
+            }
 
-                return new TemplateWrapper($this, $name);
+            $count = \count($names);
+            foreach ($names as $name) {
+            if ($name instanceof Template) {
+            trigger_deprecation('twig/twig', '3.9', 'Passing a "%s" instance to "%s" is deprecated.', Template::class,
+            __METHOD__);
+
+            return new TemplateWrapper($this, $name);
             }
             if ($name instanceof TemplateWrapper) {
-                return $name;
+            return $name;
             }
 
             if (1 !== $count && !$this->getLoader()->exists($name)) {
-                continue;
+            continue;
             }
 
             return $this->load($name);
-        }
+            }
 
-        throw new LoaderError(\sprintf('Unable to find one of the following templates: "%s".', implode('", "', $names)));
-    }
+            throw new LoaderError(\sprintf('Unable to find one of the following templates: "%s".', implode('", "',
+            $names)));
+            }
 
-    /**
-     * @return void
-     */
-    public function setLexer(Lexer $lexer)
-    {
-        $this->lexer = $lexer;
-    }
+            /**
+            * @return void
+            */
+            public function setLexer(Lexer $lexer)
+            {
+            $this->lexer = $lexer;
+            }
 
-    /**
-     * @throws SyntaxError When the code is syntactically wrong
-     */
-    public function tokenize(Source $source): TokenStream
-    {
-        if (null === $this->lexer) {
+            /**
+            * @throws SyntaxError When the code is syntactically wrong
+            */
+            public function tokenize(Source $source): TokenStream
+            {
+            if (null === $this->lexer) {
             $this->lexer = new Lexer($this);
-        }
+            }
 
-        return $this->lexer->tokenize($source);
-    }
+            return $this->lexer->tokenize($source);
+            }
 
-    /**
-     * @return void
-     */
-    public function setParser(Parser $parser)
-    {
-        $this->parser = $parser;
-    }
+            /**
+            * @return void
+            */
+            public function setParser(Parser $parser)
+            {
+            $this->parser = $parser;
+            }
 
-    /**
-     * Converts a token stream to a node tree.
-     *
-     * @throws SyntaxError When the token stream is syntactically or semantically wrong
-     */
-    public function parse(TokenStream $stream): ModuleNode
-    {
-        if (null === $this->parser) {
+            /**
+            * Converts a token stream to a node tree.
+            *
+            * @throws SyntaxError When the token stream is syntactically or semantically wrong
+            */
+            public function parse(TokenStream $stream): ModuleNode
+            {
+            if (null === $this->parser) {
             $this->parser = new Parser($this);
-        }
+            }
 
-        return $this->parser->parse($stream);
-    }
+            return $this->parser->parse($stream);
+            }
 
-    /**
-     * @return void
-     */
-    public function setCompiler(Compiler $compiler)
-    {
-        $this->compiler = $compiler;
-    }
+            /**
+            * @return void
+            */
+            public function setCompiler(Compiler $compiler)
+            {
+            $this->compiler = $compiler;
+            }
 
-    /**
-     * Compiles a node and returns the PHP code.
-     */
-    public function compile(Node $node): string
-    {
-        if (null === $this->compiler) {
+            /**
+            * Compiles a node and returns the PHP code.
+            */
+            public function compile(Node $node): string
+            {
+            if (null === $this->compiler) {
             $this->compiler = new Compiler($this);
-        }
+            }
 
-        return $this->compiler->compile($node)->getSource();
-    }
+            return $this->compiler->compile($node)->getSource();
+            }
 
-    /**
-     * Compiles a template source code.
-     *
-     * @throws SyntaxError When there was an error during tokenizing, parsing or compiling
-     */
-    public function compileSource(Source $source): string
-    {
-        try {
+            /**
+            * Compiles a template source code.
+            *
+            * @throws SyntaxError When there was an error during tokenizing, parsing or compiling
+            */
+            public function compileSource(Source $source): string
+            {
+            try {
             return $this->compile($this->parse($this->tokenize($source)));
-        } catch (Error $e) {
+            } catch (Error $e) {
             $e->setSourceContext($source);
             throw $e;
-        } catch (\Exception $e) {
-            throw new SyntaxError(\sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $source, $e);
-        }
-    }
+            } catch (\Exception $e) {
+            throw new SyntaxError(\sprintf('An exception has been thrown during the compilation of a template ("%s").',
+            $e->getMessage()), -1, $source, $e);
+            }
+            }
 
-    /**
-     * @return void
-     */
-    public function setLoader(LoaderInterface $loader)
-    {
-        $this->loader = $loader;
-    }
+            /**
+            * @return void
+            */
+            public function setLoader(LoaderInterface $loader)
+            {
+            $this->loader = $loader;
+            }
 
-    public function getLoader(): LoaderInterface
-    {
-        return $this->loader;
-    }
+            public function getLoader(): LoaderInterface
+            {
+            return $this->loader;
+            }
 
-    /**
-     * @return void
-     */
-    public function setCharset(string $charset)
-    {
-        if ('UTF8' === $charset = strtoupper($charset ?: '')) {
+            /**
+            * @return void
+            */
+            public function setCharset(string $charset)
+            {
+            if ('UTF8' === $charset = strtoupper($charset ?: '')) {
             // iconv on Windows requires "UTF-8" instead of "UTF8"
             $charset = 'UTF-8';
-        }
-
-        $this->charset = $charset;
-    }
-
-    public function getCharset(): string
-    {
-        return $this->charset;
-    }
-
-    public function hasExtension(string $class): bool
-    {
-        return $this->extensionSet->hasExtension($class);
-    }
-
-    /**
-     * @return void
-     */
-    public function addRuntimeLoader(RuntimeLoaderInterface $loader)
-    {
-        $this->runtimeLoaders[] = $loader;
-    }
-
-    /**
-     * @template TExtension of ExtensionInterface
-     *
-     * @param class-string<TExtension> $class
-     *
-     * @return TExtension
-     */
-    public function getExtension(string $class): ExtensionInterface
-    {
-        return $this->extensionSet->getExtension($class);
-    }
-
-    /**
-     * Returns the runtime implementation of a Twig element (filter/function/tag/test).
-     *
-     * @template TRuntime of object
-     *
-     * @param class-string<TRuntime> $class A runtime class name
-     *
-     * @return TRuntime The runtime implementation
-     *
-     * @throws RuntimeError When the template cannot be found
-     */
-    public function getRuntime(string $class)
-    {
-        if (isset($this->runtimes[$class])) {
-            return $this->runtimes[$class];
-        }
-
-        foreach ($this->runtimeLoaders as $loader) {
-            if (null !== $runtime = $loader->load($class)) {
-                return $this->runtimes[$class] = $runtime;
-            }
-        }
-
-        if (null !== $runtime = $this->defaultRuntimeLoader->load($class)) {
-            return $this->runtimes[$class] = $runtime;
-        }
-
-        throw new RuntimeError(\sprintf('Unable to load the "%s" runtime.', $class));
-    }
-
-    /**
-     * @return void
-     */
-    public function addExtension(ExtensionInterface $extension)
-    {
-        $this->extensionSet->addExtension($extension);
-        $this->updateOptionsHash();
-    }
-
-    /**
-     * @param ExtensionInterface[] $extensions An array of extensions
-     *
-     * @return void
-     */
-    public function setExtensions(array $extensions)
-    {
-        $this->extensionSet->setExtensions($extensions);
-        $this->updateOptionsHash();
-    }
-
-    /**
-     * @return ExtensionInterface[] An array of extensions (keys are for internal usage only and should not be relied on)
-     */
-    public function getExtensions(): array
-    {
-        return $this->extensionSet->getExtensions();
-    }
-
-    /**
-     * @return void
-     */
-    public function addTokenParser(TokenParserInterface $parser)
-    {
-        $this->extensionSet->addTokenParser($parser);
-    }
-
-    /**
-     * @return TokenParserInterface[]
-     *
-     * @internal
-     */
-    public function getTokenParsers(): array
-    {
-        return $this->extensionSet->getTokenParsers();
-    }
-
-    /**
-     * @internal
-     */
-    public function getTokenParser(string $name): ?TokenParserInterface
-    {
-        return $this->extensionSet->getTokenParser($name);
-    }
-
-    /**
-     * @param callable(string): (TokenParserInterface|false) $callable
-     */
-    public function registerUndefinedTokenParserCallback(callable $callable): void
-    {
-        $this->extensionSet->registerUndefinedTokenParserCallback($callable);
-    }
-
-    /**
-     * @return void
-     */
-    public function addNodeVisitor(NodeVisitorInterface $visitor)
-    {
-        $this->extensionSet->addNodeVisitor($visitor);
-    }
-
-    /**
-     * @return NodeVisitorInterface[]
-     *
-     * @internal
-     */
-    public function getNodeVisitors(): array
-    {
-        return $this->extensionSet->getNodeVisitors();
-    }
-
-    /**
-     * @return void
-     */
-    public function addFilter(TwigFilter $filter)
-    {
-        $this->extensionSet->addFilter($filter);
-    }
-
-    /**
-     * @internal
-     */
-    public function getFilter(string $name): ?TwigFilter
-    {
-        return $this->extensionSet->getFilter($name);
-    }
-
-    /**
-     * @param callable(string): (TwigFilter|false) $callable
-     */
-    public function registerUndefinedFilterCallback(callable $callable): void
-    {
-        $this->extensionSet->registerUndefinedFilterCallback($callable);
-    }
-
-    /**
-     * Gets the registered Filters.
-     *
-     * Be warned that this method cannot return filters defined with registerUndefinedFilterCallback.
-     *
-     * @return TwigFilter[]
-     *
-     * @see registerUndefinedFilterCallback
-     *
-     * @internal
-     */
-    public function getFilters(): array
-    {
-        return $this->extensionSet->getFilters();
-    }
-
-    /**
-     * @return void
-     */
-    public function addTest(TwigTest $test)
-    {
-        $this->extensionSet->addTest($test);
-    }
-
-    /**
-     * @return TwigTest[]
-     *
-     * @internal
-     */
-    public function getTests(): array
-    {
-        return $this->extensionSet->getTests();
-    }
-
-    /**
-     * @internal
-     */
-    public function getTest(string $name): ?TwigTest
-    {
-        return $this->extensionSet->getTest($name);
-    }
-
-    /**
-     * @return void
-     */
-    public function addFunction(TwigFunction $function)
-    {
-        $this->extensionSet->addFunction($function);
-    }
-
-    /**
-     * @internal
-     */
-    public function getFunction(string $name): ?TwigFunction
-    {
-        return $this->extensionSet->getFunction($name);
-    }
-
-    /**
-     * @param callable(string): (TwigFunction|false) $callable
-     */
-    public function registerUndefinedFunctionCallback(callable $callable): void
-    {
-        $this->extensionSet->registerUndefinedFunctionCallback($callable);
-    }
-
-    /**
-     * Gets registered functions.
-     *
-     * Be warned that this method cannot return functions defined with registerUndefinedFunctionCallback.
-     *
-     * @return TwigFunction[]
-     *
-     * @see registerUndefinedFunctionCallback
-     *
-     * @internal
-     */
-    public function getFunctions(): array
-    {
-        return $this->extensionSet->getFunctions();
-    }
-
-    /**
-     * Registers a Global.
-     *
-     * New globals can be added before compiling or rendering a template;
-     * but after, you can only update existing globals.
-     *
-     * @param mixed $value The global value
-     *
-     * @return void
-     */
-    public function addGlobal(string $name, $value)
-    {
-        if ($this->extensionSet->isInitialized() && !\array_key_exists($name, $this->getGlobals())) {
-            throw new \LogicException(\sprintf('Unable to add global "%s" as the runtime or the extensions have already been initialized.', $name));
-        }
-
-        if (null !== $this->resolvedGlobals) {
-            $this->resolvedGlobals[$name] = $value;
-        } else {
-            $this->globals[$name] = $value;
-        }
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function getGlobals(): array
-    {
-        if ($this->extensionSet->isInitialized()) {
-            if (null === $this->resolvedGlobals) {
-                $this->resolvedGlobals = array_merge($this->extensionSet->getGlobals(), $this->globals);
             }
 
-            return $this->resolvedGlobals;
-        }
+            $this->charset = $charset;
+            }
 
-        return array_merge($this->extensionSet->getGlobals(), $this->globals);
-    }
+            public function getCharset(): string
+            {
+            return $this->charset;
+            }
 
-    public function resetGlobals(): void
-    {
-        $this->resolvedGlobals = null;
-        $this->extensionSet->resetGlobals();
-    }
+            public function hasExtension(string $class): bool
+            {
+            return $this->extensionSet->hasExtension($class);
+            }
 
-    /**
-     * @deprecated since Twig 3.14
-     */
-    public function mergeGlobals(array $context): array
-    {
-        trigger_deprecation('twig/twig', '3.14', 'The "%s" method is deprecated.', __METHOD__);
+            /**
+            * @return void
+            */
+            public function addRuntimeLoader(RuntimeLoaderInterface $loader)
+            {
+            $this->runtimeLoaders[] = $loader;
+            }
 
-        return $context + $this->getGlobals();
-    }
+            /**
+            * @template TExtension of ExtensionInterface
+            *
+            * @param class-string<TExtension> $class
+                *
+                * @return TExtension
+                */
+                public function getExtension(string $class): ExtensionInterface
+                {
+                return $this->extensionSet->getExtension($class);
+                }
 
-    /**
-     * @internal
-     *
-     * @return array<string, array{precedence: int, precedence_change?: OperatorPrecedenceChange, class: class-string<AbstractUnary>}>
-     */
-    public function getUnaryOperators(): array
-    {
-        return $this->extensionSet->getUnaryOperators();
-    }
+                /**
+                * Returns the runtime implementation of a Twig element (filter/function/tag/test).
+                *
+                * @template TRuntime of object
+                *
+                * @param class-string<TRuntime> $class A runtime class name
+                    *
+                    * @return TRuntime The runtime implementation
+                    *
+                    * @throws RuntimeError When the template cannot be found
+                    */
+                    public function getRuntime(string $class)
+                    {
+                    if (isset($this->runtimes[$class])) {
+                    return $this->runtimes[$class];
+                    }
 
-    /**
-     * @internal
-     *
-     * @return array<string, array{precedence: int, precedence_change?: OperatorPrecedenceChange, class: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}>
-     */
-    public function getBinaryOperators(): array
-    {
-        return $this->extensionSet->getBinaryOperators();
-    }
+                    foreach ($this->runtimeLoaders as $loader) {
+                    if (null !== $runtime = $loader->load($class)) {
+                    return $this->runtimes[$class] = $runtime;
+                    }
+                    }
 
-    private function updateOptionsHash(): void
-    {
-        $this->optionsHash = implode(':', [
-            $this->extensionSet->getSignature(),
-            \PHP_MAJOR_VERSION,
-            \PHP_MINOR_VERSION,
-            self::VERSION,
-            (int) $this->debug,
-            (int) $this->strictVariables,
-            $this->useYield ? '1' : '0',
-        ]);
-    }
-}
+                    if (null !== $runtime = $this->defaultRuntimeLoader->load($class)) {
+                    return $this->runtimes[$class] = $runtime;
+                    }
+
+                    throw new RuntimeError(\sprintf('Unable to load the "%s" runtime.', $class));
+                    }
+
+                    /**
+                    * @return void
+                    */
+                    public function addExtension(ExtensionInterface $extension)
+                    {
+                    $this->extensionSet->addExtension($extension);
+                    $this->updateOptionsHash();
+                    }
+
+                    /**
+                    * @param ExtensionInterface[] $extensions An array of extensions
+                    *
+                    * @return void
+                    */
+                    public function setExtensions(array $extensions)
+                    {
+                    $this->extensionSet->setExtensions($extensions);
+                    $this->updateOptionsHash();
+                    }
+
+                    /**
+                    * @return ExtensionInterface[] An array of extensions (keys are for internal usage only and should
+                    not be relied on)
+                    */
+                    public function getExtensions(): array
+                    {
+                    return $this->extensionSet->getExtensions();
+                    }
+
+                    /**
+                    * @return void
+                    */
+                    public function addTokenParser(TokenParserInterface $parser)
+                    {
+                    $this->extensionSet->addTokenParser($parser);
+                    }
+
+                    /**
+                    * @return TokenParserInterface[]
+                    *
+                    * @internal
+                    */
+                    public function getTokenParsers(): array
+                    {
+                    return $this->extensionSet->getTokenParsers();
+                    }
+
+                    /**
+                    * @internal
+                    */
+                    public function getTokenParser(string $name): ?TokenParserInterface
+                    {
+                    return $this->extensionSet->getTokenParser($name);
+                    }
+
+                    /**
+                    * @param callable(string): (TokenParserInterface|false) $callable
+                    */
+                    public function registerUndefinedTokenParserCallback(callable $callable): void
+                    {
+                    $this->extensionSet->registerUndefinedTokenParserCallback($callable);
+                    }
+
+                    /**
+                    * @return void
+                    */
+                    public function addNodeVisitor(NodeVisitorInterface $visitor)
+                    {
+                    $this->extensionSet->addNodeVisitor($visitor);
+                    }
+
+                    /**
+                    * @return NodeVisitorInterface[]
+                    *
+                    * @internal
+                    */
+                    public function getNodeVisitors(): array
+                    {
+                    return $this->extensionSet->getNodeVisitors();
+                    }
+
+                    /**
+                    * @return void
+                    */
+                    public function addFilter(TwigFilter $filter)
+                    {
+                    $this->extensionSet->addFilter($filter);
+                    }
+
+                    /**
+                    * @internal
+                    */
+                    public function getFilter(string $name): ?TwigFilter
+                    {
+                    return $this->extensionSet->getFilter($name);
+                    }
+
+                    /**
+                    * @param callable(string): (TwigFilter|false) $callable
+                    */
+                    public function registerUndefinedFilterCallback(callable $callable): void
+                    {
+                    $this->extensionSet->registerUndefinedFilterCallback($callable);
+                    }
+
+                    /**
+                    * Gets the registered Filters.
+                    *
+                    * Be warned that this method cannot return filters defined with registerUndefinedFilterCallback.
+                    *
+                    * @return TwigFilter[]
+                    *
+                    * @see registerUndefinedFilterCallback
+                    *
+                    * @internal
+                    */
+                    public function getFilters(): array
+                    {
+                    return $this->extensionSet->getFilters();
+                    }
+
+                    /**
+                    * @return void
+                    */
+                    public function addTest(TwigTest $test)
+                    {
+                    $this->extensionSet->addTest($test);
+                    }
+
+                    /**
+                    * @return TwigTest[]
+                    *
+                    * @internal
+                    */
+                    public function getTests(): array
+                    {
+                    return $this->extensionSet->getTests();
+                    }
+
+                    /**
+                    * @internal
+                    */
+                    public function getTest(string $name): ?TwigTest
+                    {
+                    return $this->extensionSet->getTest($name);
+                    }
+
+                    /**
+                    * @return void
+                    */
+                    public function addFunction(TwigFunction $function)
+                    {
+                    $this->extensionSet->addFunction($function);
+                    }
+
+                    /**
+                    * @internal
+                    */
+                    public function getFunction(string $name): ?TwigFunction
+                    {
+                    return $this->extensionSet->getFunction($name);
+                    }
+
+                    /**
+                    * @param callable(string): (TwigFunction|false) $callable
+                    */
+                    public function registerUndefinedFunctionCallback(callable $callable): void
+                    {
+                    $this->extensionSet->registerUndefinedFunctionCallback($callable);
+                    }
+
+                    /**
+                    * Gets registered functions.
+                    *
+                    * Be warned that this method cannot return functions defined with registerUndefinedFunctionCallback.
+                    *
+                    * @return TwigFunction[]
+                    *
+                    * @see registerUndefinedFunctionCallback
+                    *
+                    * @internal
+                    */
+                    public function getFunctions(): array
+                    {
+                    return $this->extensionSet->getFunctions();
+                    }
+
+                    /**
+                    * Registers a Global.
+                    *
+                    * New globals can be added before compiling or rendering a template;
+                    * but after, you can only update existing globals.
+                    *
+                    * @param mixed $value The global value
+                    *
+                    * @return void
+                    */
+                    public function addGlobal(string $name, $value)
+                    {
+                    if ($this->extensionSet->isInitialized() && !\array_key_exists($name, $this->getGlobals())) {
+                    throw new \LogicException(\sprintf('Unable to add global "%s" as the runtime or the extensions have
+                    already been initialized.', $name));
+                    }
+
+                    if (null !== $this->resolvedGlobals) {
+                    $this->resolvedGlobals[$name] = $value;
+                    } else {
+                    $this->globals[$name] = $value;
+                    }
+                    }
+
+                    /**
+                    * @return array<string, mixed>
+                        */
+                        public function getGlobals(): array
+                        {
+                        if ($this->extensionSet->isInitialized()) {
+                        if (null === $this->resolvedGlobals) {
+                        $this->resolvedGlobals = array_merge($this->extensionSet->getGlobals(), $this->globals);
+                        }
+
+                        return $this->resolvedGlobals;
+                        }
+
+                        return array_merge($this->extensionSet->getGlobals(), $this->globals);
+                        }
+
+                        public function resetGlobals(): void
+                        {
+                        $this->resolvedGlobals = null;
+                        $this->extensionSet->resetGlobals();
+                        }
+
+                        /**
+                        * @deprecated since Twig 3.14
+                        */
+                        public function mergeGlobals(array $context): array
+                        {
+                        trigger_deprecation('twig/twig', '3.14', 'The "%s" method is deprecated.', __METHOD__);
+
+                        return $context + $this->getGlobals();
+                        }
+
+                        /**
+                        * @internal
+                        *
+                        * @return array<string, array{precedence: int, precedence_change?: OperatorPrecedenceChange,
+                            class: class-string<AbstractUnary>}>
+                            */
+                            public function getUnaryOperators(): array
+                            {
+                            return $this->extensionSet->getUnaryOperators();
+                            }
+
+                            /**
+                            * @internal
+                            *
+                            * @return array<string, array{precedence: int, precedence_change?: OperatorPrecedenceChange,
+                                class: class-string<AbstractBinary>, associativity: ExpressionParser::OPERATOR_*}>
+                                */
+                                public function getBinaryOperators(): array
+                                {
+                                return $this->extensionSet->getBinaryOperators();
+                                }
+
+                                private function updateOptionsHash(): void
+                                {
+                                $this->optionsHash = implode(':', [
+                                $this->extensionSet->getSignature(),
+                                \PHP_MAJOR_VERSION,
+                                \PHP_MINOR_VERSION,
+                                self::VERSION,
+                                (int) $this->debug,
+                                (int) $this->strictVariables,
+                                $this->useYield ? '1' : '0',
+                                ]);
+                                }
+                                }

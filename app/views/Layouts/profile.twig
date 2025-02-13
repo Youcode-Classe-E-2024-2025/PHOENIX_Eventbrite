@@ -1,39 +1,46 @@
 {% extends 'Layouts/base.twig' %}
 
-{% block title %}Dashboard - Participants{% endblock %}
+{% block title %}Profil de l'utilisateur{% endblock %}
 
 {% block content %}
 <div class="container">
-    <h2 class="mb-4">Dashboard</h2>
-    
-    
+    <h2 class="mb-4">Profil de l'utilisateur</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Profil utilisateur</div>
+                <div class="card-body text-center">
+                    <!-- Avatar and Name -->
+                    <img src="{{ user.avatar ?? '/images/default-avatar.png' }}" class="rounded-circle mb-3" width="100" height="100" alt="Avatar">
+                    <h5>{{ user.fullName|upper }}</h5>
+                    <p class="text-muted">{{ user.role | capitalize }}</p>
+                    <a href="/profile/edit" class="btn btn-primary btn-sm">Modifier le profil</a>
+                </div>
+            </div>
+        </div>
         
- <div class="row">
         <div class="col-md-8">
+            <!-- Event History -->
             <div class="card mb-4">
-                <div class="card-header">Événements réservés ({{ events|length }})</div>
+                <div class="card-header">Historique des événements</div>
                 <div class="card-body">
-                    {% if events|length > 0 %}
+                    {% if user.events|length > 0 %}
                         <ul class="list-group">
-                            {% for event in events %}
+                            {% for event in user.events %}
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h5 class="mb-1">{{ event.title }}</h5>
-                                        <p class="mb-1">{{ event.description|slice(0, 100) }}...</p>
-                                        <p class="mb-1"><strong>Lieu :</strong> {{ event.location }}</p>
-                                        <p class="mb-1"><strong>Catégorie :</strong> {{ event.category_id }}</p>
-                                        <p class="mb-1"><strong>Statut :</strong> {{ event.status }}</p>
-                                        {# <small class="text-muted">{{ event.date|date('d/m/Y H:i') }}</small> #}
-                                    </div>
-                                    {# <a href="{{ path('event_details', {'id': event.id}) }}" class="btn btn-primary btn-sm">Détails</a> #}
+                                    {{ event.name }}
+                                    <span class="badge bg-info">{{ event.date|date('d/m/Y') }}</span>
                                 </li>
                             {% endfor %}
                         </ul>
                     {% else %}
-                        <p class="text-muted">Aucun événement réservé.</p>
+                        <p class="text-muted">Aucun événement enregistré.</p>
                     {% endif %}
                 </div>
-        
+            </div>
+
+            <!-- Notifications Section -->
             <div class="card">
                 <div class="card-header">Notifications</div>
                 <div class="card-body">
@@ -52,6 +59,6 @@
                 </div>
             </div>
         </div>
-  
+    </div>
 </div>
 {% endblock %}

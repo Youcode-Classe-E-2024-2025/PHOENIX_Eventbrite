@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Core;
+use App\Core\Session;
 
 abstract class Controller
 {
@@ -21,11 +22,15 @@ abstract class Controller
 
     protected function render(string $view, array $data = []): void
     {
+
+        Session::start();
         // Add session data to all views
         $data['session'] = $_SESSION;
         $data['is_authenticated'] = $this->isAuthenticated();
-    
+        
+
         echo $this->twig->render($view . '.twig', $data);
+        unset($_SESSION['message']);
     }
 
     protected function json(array $data, int $status = 200): string

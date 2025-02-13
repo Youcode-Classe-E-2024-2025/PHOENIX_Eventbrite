@@ -14,9 +14,9 @@ class Logger
 
     private string $logFile;
 
-    public function __construct(string $logFile = null)
+    public function __construct(string $logFile = '')
     {
-        $this->logFile = $logFile ?? __DIR__ . '/../../logs/app.log';
+        $this->logFile = $logFile === '' ? __DIR__ . '/../../logs/app.log' : $logFile;
     }
 
     public function log(string $level, string $message, array $context = []): void

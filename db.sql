@@ -13,19 +13,10 @@ CREATE TABLE
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
    );
-   INSERT INTO users (email, password_hash, role, avatar_url, full_name) 
-VALUES ('admin@example.com', '$argon2id$v=19$m=65536,t=4,p=1$RnBjTzRnalZlVHV3M08ySg$cyqnuIyDXw8PLbCcyrhcn4jLqo+pX8KX54uVT3gCZQw', 'Admin', 'url_avatar_here', 'Admin User');
-UPDATE users
-SET id = 1 , updated_at = CURRENT_TIMESTAMP
-WHERE email = 'admin@phoenix.com';
-
 
 CREATE TABLE
    categories (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL);
 
-<<<<<<< HEAD
-r5r
-=======
 CREATE TABLE
    events (
       id SERIAL PRIMARY KEY,
@@ -38,11 +29,9 @@ CREATE TABLE
       organizer_id INT REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
       status VARCHAR(50) NOT NULL CHECK (status IN ('Actif', 'En attente', 'Terminé')),
       category_id INT REFERENCES categories (id),
-      image_url VARCHAR(255),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
    );
->>>>>>> feature/events_crud
 
 
 
@@ -71,6 +60,7 @@ CREATE TABLE
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
    );
+
 
 CREATE TABLE
    payments (
@@ -170,30 +160,6 @@ VALUES
       'En attente',
       3
    );
-   INSERT INTO
-   events (
-      title,
-      description,
-      date,
-      location,
-      price,
-      capacity,
-      organizer_id,
-      status,
-      category_id
-   )
-VALUES
-   (
-      'Conférence Tech',
-      'Une conférence sur les dernières technologies.',
-      '2023-12-15 10:00:00',
-      'Paris',
-      50.00,
-      100,
-      8,
-      'Actif',
-      1
-   );
 
 INSERT INTO
    event_tags (event_id, tag_id)
@@ -229,123 +195,5 @@ VALUES
    (1, 100.00, 'Stripe', 'txn_123456789', 'Réussi'), 
    (2, 50.00, 'PayPal', 'txn_987654321', 'Réussi');
 
-INSERT INTO reservations (
-   user_id,
-   event_id,
-   ticket_type,
-   quantity,
-   total_price,
-   status
-) VALUES
-   (8, 1, 'Payant', 1, 50.00, 'Confirmé');
 
 
-SELECT e.title , e.description , e.location, e.status, e.category_id ,e.status  FROM events AS e JOIN reservations AS c ON c.event_id = e.id where c.user_id = 8;
-ALTER TABLE events
-ADD COLUMN image_url VARCHAR(255);
-CREATE TYPE ticket_type_enum AS ENUM ('Gratuit', 'Payant', 'VIP');
-
-ALTER TABLE events 
-ADD COLUMN ticket_type ticket_type_enum;
-
-
--- Ajouter 10 événements fictifs dans la table events
-INSERT INTO "events" (
-    title,
-    description,
-    date,
-    location,
-    price,
-    capacity,
-    organizer_id,
-    status,
-    category_id,
-    image_url
-) VALUES
-   (
-      'Tech Conference 2024',
-      'Une conférence sur les dernières avancées en technologie.',
-      '2024-05-15 09:00:00',
-      'Paris',
-      100.00,
-      200,
-      1,
-      'Actif',
-      1,
-      'https://placehold.co/400x200?text=Tech+Conference'
-   );
-   -- Ajouter 10 événements fictifs dans la table events
-INSERT INTO events (
-    title,
-    description,
-    date,
-    location,
-    price,
-    capacity,
-    organizer_id,
-    status,
-    category_id,
-    image_url
-) VALUES
-   (
-      'Conférence sur' ,
-      'Découvrez les dernières découvertes en astronomie.',
-      '2024-10-15 19:00:00',
-      'Paris',
-      120.00,
-      150,
-      1,
-      'Actif',
-      1,
-      'https://placehold.co/400x200?text=Space+Conference'
-   ),
-   (
-      'Marathon de Lyon',
-      'Un marathon annuel à travers la ville de Lyon.',
-      '2024-11-20 08:00:00',
-      'Lyon',
-      0.00,
-      5000,
-      1,
-      'En attente',
-      3,
-      'https://placehold.co/400x200?text=Marathon'
-   ),
-   (
-      'Concert de Jazz à Marseille',
-      'Profitez dune soirée jazz avec des artistes renommés.',
-      '2024-12-02 20:00:00',
-      'Marseille',
-      50.00,
-      300,
-      1,
-      'Actif',
-      2,
-      'https://placehold.co/400x200?text=Jazz+Concert'
-   ),
-   (
-      'Hackathon Développement Web',
-      'Participez à un hackathon de 48 heures pour développer des applications web.',
-      '2024-12-15 09:00:00',
-      'Toulouse',
-      25.00,
-      100,
-      1,
-      'Terminé',
-      1,
-      'https://placehold.co/400x200?text=Hackathon'
-   ),
-   (
-      'Atelier Photo en Nature',
-      'Apprenez les bases de la photographie en extérieur.',
-      '2025-01-10 10:00:00',
-      'Lille',
-      30.00,
-      15,
-      1,
-      'Actif',
-      4,
-      'https://placehold.co/400x200?text=Atelier+Photo'
-   );
-ALTER TABLE users
-ADD COLUMN VIP_user BOOLEAN DEFAULT FALSE;

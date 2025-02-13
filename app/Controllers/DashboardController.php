@@ -33,20 +33,17 @@ class DashboardController extends Controller
         return $events;
     }
 
-<<<<<<< HEAD
     public function TotalEventParticper($id_user)
     {
         $events = $this->AffichageEventsParticipant($id_user);
         return count($events);
     }
     
-=======
     public function findAll()
     {
         $users = User::findAll();
         return $users;
     }
->>>>>>> setup
 
     public function totalUsers()
     {
@@ -86,7 +83,7 @@ class DashboardController extends Controller
                 ];
 
 
-                $this->render('Admin/index', ['dashboard' => $dashboard]);
+                // $this->render('Admin/index', ['dashboard' => $dashboard]);
                 $users = $this->findAll();
                 $this->render('Admin/index', ['dashboard' => $dashboard, 'users' => $users]);
                 break;

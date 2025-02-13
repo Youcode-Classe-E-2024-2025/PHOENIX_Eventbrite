@@ -191,7 +191,7 @@ class Event
             'updated_at' => $this->updated_at
         ]);
     }
-    public function selectEventById($id)
+    public static function selectEventById($id)
     {
         $requet = "SELECT * FROM events WHERE id = :id";
         $stmt = Database::getInstance()->prepare($requet);

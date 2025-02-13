@@ -16,8 +16,9 @@ $router->get('/logout', [AuthController::class, 'logout']);
 
 // Dashboard route
 $router->get('/dashboard', [DashboardController::class, 'dashboard']);
+// $router->get('/events',[PaticipantController::class, 'EventsPagination']);
 $router->get('/events',[PaticipantController::class, 'Events']);
-$router->get('/events',[PaticipantController::class, 'Events']);
+$router->get('/event_detail/:id', [PaticipantController::class, 'AccederEvent']);
 
 
 //participant route 

@@ -4,8 +4,7 @@
 
 {% block content %}
 <div class="container">
-    <h2 class="mb-4">Liste des événements réservés</h2>
-
+    <h2 class="mb-4">Liste des événements </h2>
     <div class="row">
         {% if events|length > 0 %}
             {% for event in events %}
@@ -19,7 +18,7 @@
                         <p><strong>Lieu :</strong> {{ event.location }}</p>
                         <p><strong>Catégorie :</strong> {{ event.category_id }}</p>
                         <p><strong>Statut :</strong> {{ event.status }}</p>
-                      <a href="/event/{{ event.id }}" class="btn btn-primary btn-sm">Détails</a>
+                      <a href="/event_detail/{{ event.id }}" class="btn btn-primary btn-sm">Détails</a>
 
                     </div>
                 </div>
@@ -64,72 +63,7 @@
     </div> #}
 </div>
 
-<script>$(document).ready(function () {
-    loadEvents(1); // Charger la première page au démarrage
 
-    function loadEvents(page) {
-        $.ajax({
-            url: '/get-paginated-events?page=' + page,  // URL du backend
-            method: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                renderEvents(data.events);
-                renderPagination(data.current_page, data.total_pages);
-            },
-            error: function () {
-                alert('Une erreur est survenue lors du chargement des événements.');
-            }
-        });
-    }
 
-    function renderEvents(events) {
-        let eventList = '';
-        events.forEach(function (event) {
-            eventList += `
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <img src="${event.image_url || '/assets/default-event.jpg'}" class="card-img-top" alt="${event.title}">
-                        <div class="card-body">
-                            <h5 class="card-title">${event.title}</h5>
-                            <p class="card-text">${event.description.slice(0, 100)}...</p>
-                            <p><strong>Date :</strong> ${new Date(event.date).toLocaleString()}</p>
-                            <p><strong>Lieu :</strong> ${event.location}</p>
-                            <a href="/event/${event.id}" class="btn btn-primary btn-sm">Détails</a>
-                        </div>
-                    </div>
-                </div>`;
-        });
 
-        $('#event-list').html(`<div class="row">${eventList}</div>`);
-    }
-
-    function renderPagination(currentPage, totalPages) {
-        let pagination = '';
-
-        if (currentPage > 1) {
-            pagination += `<li class="page-item"><a class="page-link" href="#" data-page="${currentPage - 1}">Précédent</a></li>`;
-        }
-
-        for (let i = 1; i <= totalPages; i++) {
-            pagination += `<li class="page-item ${i === currentPage ? 'active' : ''}">
-                <a class="page-link" href="#" data-page="${i}">${i}</a>
-            </li>`;
-        }
-
-        if (currentPage < totalPages) {
-            pagination += `<li class="page-item"><a class="page-link" href="#" data-page="${currentPage + 1}">Suivant</a></li>`;
-        }
-
-        $('#pagination').html(pagination);
-
-        // Ajouter l'événement click aux liens de pagination
-        $('#pagination a').on('click', function (e) {
-            e.preventDefault();
-            let page = $(this).data('page');
-            loadEvents(page);
-        });
-    }
-});
-
- </script>
 {% endblock %}

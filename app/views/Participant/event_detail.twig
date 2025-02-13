@@ -1,0 +1,30 @@
+{% extends 'layouts/base.twig' %}
+
+{% block title %}Détails de l'événement : {{ event.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>{{ event.title }}</h2>
+    <div class="row">
+        <div class="col-md-8">
+            <img src="{{ event.image_url | default('https://placehold.co/600x300') }}" class="img-fluid mb-4" alt="{{ event.title }}">
+            <p><strong>Description :</strong> {{ event.description }}</p>
+            <p><strong>Date :</strong> {{ event.date|date('d/m/Y H:i') }}</p>
+            <p><strong>Lieu :</strong> {{ event.location }}</p>
+            <p><strong>Prix :</strong> {{ event.price ? event.price ~ ' €' : 'Gratuit' }}</p>
+            <p><strong>Capacité :</strong> {{ event.capacity ? event.capacity ~ ' personnes' : 'Non spécifiée' }}</p>
+            <p><strong>Statut :</strong> {{ event.status }}</p>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Informations sur l'organisateur</div>
+                <div class="card-body">
+                    <p><strong>Organisateur :</strong> {{ event.organizer_name }}</p>
+                    <p><strong>Contact :</strong> {{ event.organizer_contact }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="/events" class="btn btn-secondary mt-4">Retour à la liste des événements</a>
+</div>
+{% endblock %}

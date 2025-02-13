@@ -3,8 +3,7 @@
 use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
 use App\Controllers\AdminController;
-use App\Controllers\PaticipantController;
-use App\Controllers\PatticipantController;
+use App\Controllers\ParticipantController;
 use App\Controllers\EventController;
 
 // Home route
@@ -18,10 +17,10 @@ $router->get('/logout', [AuthController::class, 'logout']);
 $router->get('/profile', [AuthController::class, 'profile']);
 
 // Dashboard route
-$router->get('/dashboard', [DashboardController::class, 'dashboard'], ['AuthMiddleware']);
+$router->get('/dashboard', [DashboardController::class, 'dashboard']);
 // $router->get('/events',[PaticipantController::class, 'EventsPagination']);
 $router->get('/events',[ParticipantController::class, 'Events']);
-$router->get('/event_detail/:id', [ParticipantController::class, 'AccederEvent']);
+$router->get('/event_detail/:id', [ParticipantControllerParticipantController::class, 'AccederEvent']);
 
 
 //participant route 

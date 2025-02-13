@@ -14,7 +14,7 @@ class Database
         if (self::$instance === null) {
             try {
                 $host = $_ENV['DB_HOST'] ?? 'localhost';
-                $port = $_ENV['DB_PORT'] ?? '5432';
+                $port = $_ENV['DB_PORT'] ?? '5433';
                 $dbname = $_ENV['DB_DATABASE'];
                 $user = $_ENV['DB_USERNAME'];
                 $password = $_ENV['DB_PASSWORD'];

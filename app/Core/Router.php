@@ -26,7 +26,6 @@ class Router
     }
     private array $routes = [];
     private array $middlewares = [];
-    private string $middlewarePath = 'App\\Middleware\\';
 
     public function addRoute(string $method, string $path, array $handler, array $middleware = []): void
     {
@@ -63,22 +62,12 @@ class Router
             if ($this->matchRoute($route['path'], $path) && $route['method'] === $requestMethod) {
                 
                 foreach ($route['middleware'] as $middleware) {
-                    $middleware = $this->middlewarePath . $middleware;
-                    if (class_exists($middleware) && method_exists($middleware, 'handle')) {
-                        $middleware = new $middleware();
-                        $response = $middleware->handle();
-                        if ($response['success'] === false) {
-                            echo $response['message'];
-                            exit;
+                    if (isset($this->middlewares[$middleware])) {
+                        $response = ($this->middlewares[$middleware])();
+                        if ($response !== true) {
+                            return $response;
                         }
                     }
-                    
-                    // if (isset($this->middlewares[$middleware])) {
-                    //     $response = ($this->middlewares[$middleware])();
-                    //     if ($response !== true) {
-                    //         return $response;
-                    //     }
-                    // }
                 }
 
                 $params = $this->extractParams($route['path'], $path);

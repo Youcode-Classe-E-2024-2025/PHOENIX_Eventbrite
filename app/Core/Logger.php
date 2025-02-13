@@ -16,7 +16,7 @@ class Logger
 
     public function __construct(string $logFile = '')
     {
-        $this->logFile = $logFile === '' ? __DIR__ . '/../../logs/app.log' : $logFile;
+        $this->logFile = $logFile ?? __DIR__ . '/../../logs/app.log';
     }
 
     public function log(string $level, string $message, array $context = []): void
@@ -29,7 +29,7 @@ class Logger
         $contextJson = !empty($context) ? json_encode($context) : '';
         $logMessage = "[$timestamp] [$level] $message $contextJson" . PHP_EOL;
 
-        error_log($logMessage, 3, $this->logFile);
+        // error_log($logMessage, 3, $this->logFile);
     }
 
     public function debug(string $message, array $context = []): void

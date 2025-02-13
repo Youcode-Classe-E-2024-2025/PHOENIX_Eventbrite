@@ -17,15 +17,8 @@
             <div class="card">
                 <div class="card-header">Réservez votre billet</div>
                 <div class="card-body">
-                    <form action="/reservation/{{ event.id }}" method="POST">
-                        <div class="mb-3">
-                            <label for="ticket_type" class="form-label">Type de billet</label>
-                            <select class="form-control" id="ticket_type" name="ticket_type">
-                                <option value="Gratuit">Gratuit</option>
-                                <option value="Payant">Payant</option>
-                                <option value="VIP">VIP</option>
-                            </select>
-                        </div>
+                    <form action="/resevation/{{ event.id }}" method="POST">
+
                         <div class="mb-3">
                             <label for="quantity" class="form-label">Quantité</label>
                               <input type="number" class="form-control" id="quantity" name="quantity" min="1" value="1" required>

@@ -26,6 +26,9 @@ $router->get('/event_detail/:id', [PaticipantController::class, 'AccederEvent'])
 //participant route 
 // $router->get('/admin/events', [AdminController::class, 'totalEvents']);
 $router->get('/resevation/:id', [ReservationController::class, 'ajouterReservation']);
+$router->post('/resevation/:id', [ReservationController::class, 'ajouterReservation']);
+
+
 // $router->get('/admin/events/pending', [AdminController::class, 'pendingEvents']);
 $router->get('/edit-user/:id', [AdminController::class, 'UpdateUser']);
 $router->post('/edit-user/:id', [AdminController::class, 'UpdateUser']);

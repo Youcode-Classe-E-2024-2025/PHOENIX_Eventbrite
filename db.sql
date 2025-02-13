@@ -324,3 +324,8 @@ INSERT INTO events (
    );
 ALTER TABLE users
 ADD COLUMN VIP_user BOOLEAN DEFAULT FALSE;
+ALTER Table users 
+DROP COLUMN VIP_user ;
+
+ALTER Table events
+DROP COLUMN  ticket_type ;

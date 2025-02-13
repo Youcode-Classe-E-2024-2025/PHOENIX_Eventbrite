@@ -109,22 +109,37 @@ class AuthController extends Controller
 
 
     public function profile()
-{
+    {   
     
-    $userId = $_SESSION['user_id'] ?? null;
+        if($_SERVER['REQUEST_METHOD'] === 'GET'){
+            $userId = $_SESSION['user_id'] ?? null;
+        
+            if (!$userId) {
+                $this->redirect('/');
+            }
     
-    if (!$userId) {
-        $this->redirect('/');
+        
+            $user = User::findById($userId);
+            
+            
+            return $this->render('Layouts/profile', [
+                'user' => $user,
+                'notifications' => [], 
+                'events' => []  
+            ]);
+        }elseif($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $validator = new Validator($_POST);
+            $validator->required('full_name')->minLength('full_name', 3)
+                ->required('email')->email('email')
+                ->required('password')->minLength('password', 6);
+            if ($validator->isValid()) {                
+                $user = User::findById($_SESSION['user_id']);
+                $user->setFullName($_POST['full_name']);
+                $user->setEmail($_POST['email']);
+                $user->setPassword(Security::hashPassword($_POST['password']));
+                $user->save($user->getId());
+                $this->redirect('/profile');
+                }
+        }
     }
-
-    
-    $user = User::findById($userId);
-    
-    
-    return $this->render('Layouts/profile', [
-        'user' => $user,
-        'notifications' => [], 
-        'events' => []  
-    ]);
-}
 }

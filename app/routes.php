@@ -39,7 +39,6 @@ $router->get('/dashboard', [DashboardController::class, 'dashboard']);
 // Event routes
 $router->get('/events/create', [EventController::class, 'create']);
 $router->post('/events/create', [EventController::class, 'store']);
-// $router->get('/events/:id', [EventController::class, 'show']);
-// $router->get('/events/:id/edit', [EventController::class, 'edit']);
-// $router->post('/events/:id/update', [EventController::class, 'update']);
-// $router->post('/events/:id/delete', [EventController::class, 'delete']);
+$router->get('/events/delete', [EventController::class, 'delete']);
+$router->get('/events/update', [EventController::class, 'update']);
+$router->post('/events/update', [EventController::class, 'update']);

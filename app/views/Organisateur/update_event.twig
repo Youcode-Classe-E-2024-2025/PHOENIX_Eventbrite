@@ -1,0 +1,93 @@
+{% extends "Layouts/base.twig" %}
+
+{% block title %}Update Event{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Update Event</h4>
+                </div>
+                <div class="card-body">
+                    <form action="/events/update" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="id" value="{{ event.id }}">
+                        
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" value="{{ event.title }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required>{{ event.description }}</textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="date" class="form-label">Date</label>
+                                <input type="date" class="form-control" id="date" name="date" value="{{ event.date|date('Y-m-d') }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="time" class="form-label">Time</label>
+                                <input type="time" class="form-control" id="time" name="time" value="{{ event.date|date('H:i') }}" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="location" name="location" value="{{ event.location }}" required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="price" class="form-label">Price</label>
+                                <input type="number" step="0.01" class="form-control" id="price" name="price" value="{{ event.price }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="capacity" class="form-label">Capacity</label>
+                                <input type="number" class="form-control" id="capacity" name="capacity" value="{{ event.capacity }}" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Category</label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="1" {% if event.category_id == 1 %}selected{% endif %}>Technology</option>
+                                <option value="2" {% if event.category_id == 2 %}selected{% endif %}>Music</option>
+                                <option value="3" {% if event.category_id == 3 %}selected{% endif %}>Sports</option>
+                                <option value="4" {% if event.category_id == 4 %}selected{% endif %}>Art</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="Actif" {% if event.status == 'Actif' %}selected{% endif %}>Active</option>
+                                <option value="En attente" {% if event.status == 'En attente' %}selected{% endif %}>Pending</option>
+                                <option value="Terminé" {% if event.status == 'Terminé' %}selected{% endif %}>Completed</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Event Image</label>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                            {% if event.image_url %}
+                                <div class="mt-2">
+                                    <small>Current image: {{ event.image_url }}</small>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Update Event</button>
+                            <a href="/dashboard" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

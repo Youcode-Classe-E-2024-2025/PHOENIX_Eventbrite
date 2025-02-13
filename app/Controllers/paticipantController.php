@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Models\Event;
+use App\Models\Reservation;
 use PHPUnit\Framework\Constraint\Count;
 
     class PaticipantController extends Controller{
@@ -56,7 +57,21 @@ use PHPUnit\Framework\Constraint\Count;
     $this->render('Participant/event_detail', ['event' => $event ,'id' => $id]);
 
 }
-   
+public function faireUneReservation($id_user,$id_event,$ticket_type,$quantity,$total_price,){
+    $event = Event::selectEventById($id_event); 
+  switch ($ticket_type) {
+    case 'Gratuit':     
+        for ($i = 0; $i < $quantity; $i++) { Reservation::ajouterReservation($id_user, $id_event); }
+
+        break;
+    case 'Payant' : 
+        
+    default:
+        # code...
+        break;
+  }
+}
+
     }
 
 ?>

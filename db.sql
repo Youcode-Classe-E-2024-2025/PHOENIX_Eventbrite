@@ -47,7 +47,6 @@ CREATE TABLE
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
    );
 
-
 CREATE TABLE
    payments (
       id SERIAL PRIMARY KEY,
@@ -219,6 +218,11 @@ INSERT INTO reservations (
 SELECT e.title , e.description , e.location, e.status, e.category_id ,e.status  FROM events AS e JOIN reservations AS c ON c.event_id = e.id where c.user_id = 8;
 ALTER TABLE events
 ADD COLUMN image_url VARCHAR(255);
+CREATE TYPE ticket_type_enum AS ENUM ('Gratuit', 'Payant', 'VIP');
+
+ALTER TABLE events 
+ADD COLUMN ticket_type ticket_type_enum;
+
 
 -- Ajouter 10 événements fictifs dans la table events
 INSERT INTO "events" (
@@ -318,3 +322,5 @@ INSERT INTO events (
       4,
       'https://placehold.co/400x200?text=Atelier+Photo'
    );
+ALTER TABLE users
+ADD COLUMN VIP_user BOOLEAN DEFAULT FALSE;

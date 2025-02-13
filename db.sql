@@ -23,7 +23,26 @@ WHERE email = 'admin@phoenix.com';
 CREATE TABLE
    categories (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL);
 
+<<<<<<< HEAD
 r5r
+=======
+CREATE TABLE
+   events (
+      id SERIAL PRIMARY KEY,
+      title VARCHAR(255) NOT NULL,
+      description TEXT,
+      date TIMESTAMP NOT NULL,
+      location VARCHAR(255) NOT NULL,
+      price NUMERIC(10, 2),
+      capacity INT,
+      organizer_id INT REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+      status VARCHAR(50) NOT NULL CHECK (status IN ('Actif', 'En attente', 'Terminé')),
+      category_id INT REFERENCES categories (id),
+      image_url VARCHAR(255),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   );
+>>>>>>> feature/events_crud
 
 
 

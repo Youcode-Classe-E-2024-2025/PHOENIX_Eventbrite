@@ -26,7 +26,7 @@ class DashboardController extends Controller
     }
 
 
- 
+
     public function AffichageDesEventes()
     {
         $events = Event::findAllEvent();
@@ -58,14 +58,32 @@ class DashboardController extends Controller
         $events = Event::getPendingEvent();
         return $events;
     }
+
+    public function ticketSoldByUserId()
+    {
+        $events = Event::ticketSoldByUserId($_SESSION['user_id']);
+        return $events;
+    }
+
+    public function revenue()
+    {
+        $events = Event::revenue($_SESSION['user_id']);
+        return $events;
+    }
+
     public function TotalEvent()
     {
-        $events = Event::findAllEvent();
+        $events = Event::findEventsByUserId($_SESSION['user_id']);
         $totalEvents = count($events);
         return $totalEvents;
     }
 
 
+    public function getEventsByUserId()
+    {
+        $events = Event::findEventsByUserId($_SESSION['user_id']);
+        return $events;
+    }
 
     public function dashboard()
     {
@@ -88,7 +106,14 @@ class DashboardController extends Controller
                 $this->render('Admin/index', ['dashboard' => $dashboard, 'users' => $users]);
                 break;
             case 'Organisateur':
-                $this->render('Organisateur/index');
+                $dashboard = [
+                    'totalEvents' => $this->TotalEvent(),
+                    'ticketSold' => $this->ticketSoldByUserId(),
+                    'revenue' => $this->revenue(),
+                    'events' => $this->getEventsByUserId(),
+                ];
+                var_dump($dashboard);
+                $this->render('Organisateur/index', ['dashboard' => $dashboard]);
                 break;
                 default:
                 $eventsParticipe = $this->AffichageEventsParticipant($user);
@@ -102,6 +127,4 @@ class DashboardController extends Controller
             
         }
     }
-
-
 }

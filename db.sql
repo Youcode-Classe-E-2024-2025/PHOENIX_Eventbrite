@@ -23,9 +23,6 @@ WHERE email = 'admin@phoenix.com';
 CREATE TABLE
    categories (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL);
 
-<<<<<<< HEAD
-r5r
-=======
 CREATE TABLE
    events (
       id SERIAL PRIMARY KEY,
@@ -42,7 +39,6 @@ CREATE TABLE
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
    );
->>>>>>> feature/events_crud
 
 
 

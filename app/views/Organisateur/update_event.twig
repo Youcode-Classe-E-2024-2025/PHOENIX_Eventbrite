@@ -70,6 +70,23 @@
                             </select>
                         </div>
 
+                        <!-- Tags -->
+                        <div class="mb-3">
+                            <label for="tags" class="form-label">Tags</label>
+                            <div class="border rounded p-3 d-flex flex-wrap gap-2">
+                                {% for tag in tags %}
+                                <div class="tag-item">
+                                    <input type="checkbox" class="btn-check" name="tags[]" id="tag{{ tag.id }}" value="{{ tag.id }}" 
+                                        {% if tag.id in eventTags|column('id') %}checked{% endif %} autocomplete="off">
+                                    <label class="btn btn-outline-primary btn-sm rounded-pill" for="tag{{ tag.id }}">
+                                        {{ tag.name }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <small class="form-text text-muted mt-2">Cliquez sur les tags pour les sélectionner</small>
+                        </div>
+
                         <div class="mb-3">
                             <label for="image" class="form-label">Event Image</label>
                             <input type="file" class="form-control" id="image" name="image" accept="image/*">

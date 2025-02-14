@@ -225,7 +225,7 @@ class Event
         $requet = "INSERT INTO events (title, description, date, location, price, capacity, organizer_id, status, category_id, created_at, updated_at, image_url) 
                    VALUES (:title, :description, :date, :location, :price, :capacity, :organizer_id, :status, :category_id, NOW(), NOW(), :image_url)";
         $stmt = Database::getInstance()->prepare($requet);
-        return $stmt->execute([
+        $success = $stmt->execute([
             'title' => $this->name,
             'description' => $this->description,
             'date' => $this->date,
@@ -237,8 +237,13 @@ class Event
             'category_id' => $this->category_id,
             'image_url' => $this->image_url
         ]);
-    }
 
+        if ($success) {
+            $this->id = Database::lastInsertId();
+            return true;
+        }
+        return false;
+    }
 
     public static function selectEventById($id)
     {
@@ -289,5 +294,8 @@ class Event
         return $event['name'];
     }
 
-    
+    public static function getLastInsertedId()
+    {
+        return Database::getInstance()->lastInsertId();
+    }
 }

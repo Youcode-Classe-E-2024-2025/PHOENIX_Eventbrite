@@ -3,8 +3,10 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Core\Database;
 use App\Models\Event;
 use App\Models\Category;
+use App\Models\Tag;
 
 class EventController extends Controller
 {
@@ -26,7 +28,11 @@ class EventController extends Controller
             $this->redirect('/login');
         }
         $categories = Category::getAllCategories();
-        $this->render('Organisateur/create_event', ['categories' => $categories]);
+        $tags = Tag::getAllTags();
+        $this->render('Organisateur/create_event', [
+            'categories' => $categories,
+            'tags' => $tags
+        ]);
     }
 
     /**
@@ -98,12 +104,17 @@ class EventController extends Controller
         );
 
         if ($newEvent->addEvent()) {
+            $eventId = Database::lastInsertId();
+            // Gérer les tags
+            if (isset($_POST['tags']) && is_array($_POST['tags'])) {
+                Tag::addTagsToEvent($eventId, $_POST['tags']);
+            }
             $_SESSION['success'] = "Event created successfully.";
         } else {
             $_SESSION['error'] = "Error creating event.";
         }
 
-        $this->redirect('/dashboard');
+        // $this->redirect('/dashboard');
     }
 
     /**
@@ -135,63 +146,84 @@ class EventController extends Controller
                 $this->redirect('/dashboard');
             }
             $categories = Category::getAllCategories();
-            $this->render('Organisateur/update_event', ['event' => $event, 'categories' => $categories]);
+            $tags = Tag::getAllTags();
+            $eventTags = Tag::getTagsByEventId($id);
+            $this->render('Organisateur/update_event', [
+                'event' => $event,
+                'categories' => $categories,
+                'tags' => $tags,
+                'eventTags' => $eventTags
+            ]);
             return;
         }
 
         // Si c'est une requête POST, traiter la mise à jour
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = htmlspecialchars($_POST['id']);
-            $title = htmlspecialchars($_POST['title']);
-            $description = htmlspecialchars($_POST['description']);
-            $date = htmlspecialchars($_POST['date']);
-            $time = htmlspecialchars($_POST['time']);
-            $location = htmlspecialchars($_POST['location']);
-            $price = htmlspecialchars($_POST['price']);
-            $capacity = htmlspecialchars($_POST['capacity']);
-            $status = htmlspecialchars($_POST['status']);
-            $category = htmlspecialchars($_POST['category']);
+        $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+        $title = $this->sanitizeInput($_POST['title'] ?? '');
+        $description = $this->sanitizeInput($_POST['description'] ?? '');
+        $date = $this->sanitizeInput($_POST['date'] ?? '');
+        $time = $this->sanitizeInput($_POST['time'] ?? '');
+        $location = $this->sanitizeInput($_POST['location'] ?? '');
+        $price = filter_input(INPUT_POST, 'price', FILTER_VALIDATE_FLOAT);
+        $capacity = filter_input(INPUT_POST, 'capacity', FILTER_VALIDATE_INT);
+        $status = $this->sanitizeInput($_POST['status'] ?? '');
+        $category = $this->sanitizeInput($_POST['category'] ?? '');
 
-            // Gestion de l'image
-            $imageUrl = null;
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $uploadDir = dirname(dirname(__DIR__)) . '/public/uploads/events/';
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0777, true);
-                }
+        // Validation de base
+        if (!$title || !$description || !$date || !$time || !$location || !$capacity || !$price || !$category || !$status) {
+            $_SESSION['error'] = 'All fields are required and must be valid';
+            $this->redirect('/events/create');
+            return;
+        }
 
-                $imageFileName = uniqid() . '_' . basename($_FILES['image']['name']);
-                $targetPath = $uploadDir . $imageFileName;
-
-                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
-                    $imageUrl = '/uploads/events/' . $imageFileName;
-                } else {
-                    $_SESSION['error'] = "Failed to upload image. Error: " . error_get_last()['message'];
-                }
+        // Gestion de l'image
+        $imageUrl = null;
+        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = dirname(dirname(__DIR__)) . '/public/uploads/events/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
             }
 
-            $event = new Event(
-                $id,
-                $title,
-                $description,
-                $date . ' ' . $time,
-                $location,
-                $price,
-                $capacity,
-                $_SESSION['user_id'],
-                $status,
-                $category,
-                $imageUrl
-            );
+            $imageFileName = uniqid() . '_' . basename($_FILES['image']['name']);
+            $targetPath = $uploadDir . $imageFileName;
 
-            if ($event->updateEvent()) {
-                $_SESSION['success'] = "Event updated successfully.";
-                $this->redirect('/dashboard');
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
+                $imageUrl = '/uploads/events/' . $imageFileName;
             } else {
-                $_SESSION['error'] = "Error updating event.";
+                $_SESSION['error'] = "Failed to upload image. Error: " . error_get_last()['message'];
+                $this->redirect('/events/create');
+                return;
             }
+        }
 
-            // $this->redirect('/dashboard');
+        $event = new Event(
+            $id,
+            $title,
+            $description,
+            $date . ' ' . $time,
+            $location,
+            $price,
+            $capacity,
+            $_SESSION['user_id'],
+            $status,
+            $category,
+            $imageUrl
+        );
+
+        if ($event->updateEvent()) {
+            // Mettre à jour les tags
+            if (isset($_POST['tags'])) {
+                // Supprimer les anciens tags
+                Tag::removeTagsFromEvent($id);
+                // Ajouter les nouveaux tags
+                if (is_array($_POST['tags'])) {
+                    Tag::addTagsToEvent($id, $_POST['tags']);
+                }
+            }
+            $_SESSION['success'] = "Event updated successfully.";
+            $this->redirect('/dashboard');
+        } else {
+            $_SESSION['error'] = "Error updating event.";
         }
     }
 

@@ -34,4 +34,8 @@ class ReservationController extends Controller
             }
         }
     }
+    public function AnnullerReservation($id_reservation){
+
+        
+    }
 }

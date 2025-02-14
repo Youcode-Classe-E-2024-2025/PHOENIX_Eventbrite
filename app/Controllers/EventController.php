@@ -109,6 +109,7 @@ class EventController extends Controller
             if (isset($_POST['tags']) && is_array($_POST['tags'])) {
                 Tag::addTagsToEvent($eventId, $_POST['tags']);
             }
+            $this->redirect('/dashboard');
             $_SESSION['success'] = "Event created successfully.";
         } else {
             $_SESSION['error'] = "Error creating event.";

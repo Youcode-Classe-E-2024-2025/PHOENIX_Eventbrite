@@ -169,11 +169,24 @@ class EventController extends Controller
     /**
      * Envoie une réponse JSON
      */
-    private function jsonResponse($data, $status = 200)
-    {
+
+    public function getEvents() {
         header('Content-Type: application/json');
-        http_response_code($status);
-        echo json_encode($data);
+        $events = Event::getEvents();
+        echo json_encode($events);
         exit;
     }
+    
+    public function renderEvents() {
+        $countEvents = count(Event::findAllEvent());
+        $countPages = ceil($countEvents / 4);
+        $this->render('Participant/events', ['countPages' => $countPages,'countEvents' => $countEvents]);
+    }
+
+    // public function getNumberOfPages() {
+    //     header('Content-Type: application/json');
+    //     $numberOfPages = ceil(count(Event::findAllEvent()) / 4);
+    //     echo json_encode($numberOfPages);
+    //     exit;
+    // }
 }

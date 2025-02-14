@@ -21,6 +21,7 @@ class Event
     private $created_at;
     private $updated_at;
     private $tags = [];
+    private static $limit = 4;
     // private $ContentVisuels = [];
 
 
@@ -125,18 +126,6 @@ class Event
         return $event['name'];
     }
 
-
-
-    // public function SelectEventPraticiper($id_user){
-    //         $requet = "SELECT e.title , e.description , e.location, e.status, e.category_id ,e.status  FROM events AS e JOIN reservations AS c ON c.event_id = e.id where c.user_id = :id_user";
-    //         $stmt = Database::getInstance()->prepare($requet);
-    //         $stmt->execute([
-    //             ':id_user' => $id_user,
-    //         ]);
-    //         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    // }
-
-
     public function searchEvent() {}
     public  function SelectEventPraticiper($id_user)
     {
@@ -147,14 +136,40 @@ class Event
         ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public static function getPaginationEvent($limit, $offest)
-    {
-        $requet = "SELECT * FROM events ORDER BY date  LIMIT = :LIMIT OFFSET = :OFFSET";
-        $stmt =  $stmt = Database::getInstance()->prepare($requet);
-        $stmt->execute([
-            ':LIMIT' => $limit,
-            ':OFFSET' => $offest
-        ]);
+    
+
+    // public static function getEvents() {
+    //     $stmt = database::getInstance()->prepare("SELECT * FROM events LIMIT :limit");
+    //     $stmt->bindParam(':limit', self::$limit, PDO::PARAM_INT);
+    //     $stmt->execute();
+    //     self::$limit+=4;
+    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // }
+    // public  static function getEvents() {
+    //     $page = $_GET['page'] ?? 1; // Get the page number from query parameters
+    //     $events = Event::getEvents($page); // Fetch events from the model
+    
+    //     // Check if the request is an AJAX request
+    //     if ($this->isAjax()) {
+    //         header('Content-Type: application/json'); // Set content type to JSON
+    //         echo json_encode(['events' => $events]); // Return events as JSON
+    //         exit; // Ensure no further output is sent
+    //     }
+    
+    //     // For regular requests, render the Twig template
+    //     return $this->render('Participant/events', ['events' => $events]);
+    // }
+    
+    // // Helper method to check if the request is AJAX
+    // private function isAjax() {
+    //     return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    // }
+    public static function getEvents() {
+        $page = $_GET['page'] ?? 1;
+        $limit = $page * 4;
+        $stmt = database::getInstance()->prepare("SELECT * FROM events LIMIT :limit");
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

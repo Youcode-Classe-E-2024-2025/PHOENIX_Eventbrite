@@ -18,10 +18,7 @@ use App\Models\Reservation;
         public function accederEventReserver(){
         
         }
-        public function Events() {
-            $events = $this->findAllEvent(); 
-            $this->render('Participant/events', ['events' => $events]);
-        }
+        
 
         public function getPaginationEvent($page)
         {

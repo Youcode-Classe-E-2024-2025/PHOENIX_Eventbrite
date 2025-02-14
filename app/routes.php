@@ -19,8 +19,11 @@ $router->get('/profile', [AuthController::class, 'profile']);
 // Dashboard route
 $router->get('/dashboard', [DashboardController::class, 'dashboard']);
 // $router->get('/events',[PaticipantController::class, 'EventsPagination']);
-$router->get('/events',[ParticipantController::class, 'Events']);
-$router->get('/event_detail/:id', [ParticipantControllerParticipantController::class, 'AccederEvent']);
+$router->get('/events', [EventController::class, 'renderEvents']);
+$router->get('/getEvents', [EventController::class, 'getEvents']);
+$router->get('/getNumberOfPages', [EventController::class, 'getNumberOfPages']);
+
+$router->get('/event_detail/:id', [EventController::class, 'AccederEvent']);
 
 
 //participant route 

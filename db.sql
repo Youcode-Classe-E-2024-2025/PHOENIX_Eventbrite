@@ -195,5 +195,72 @@ VALUES
    (1, 100.00, 'Stripe', 'txn_123456789', 'Réussi'), 
    (2, 50.00, 'PayPal', 'txn_987654321', 'Réussi');
 
+ INSERT INTO categories (id, name) VALUES (5, 'Nouvelle catégorie');
+INSERT INTO events (
+    title,
+    description,
+    date,
+    location,
+    price,
+    capacity,
+    status,
+    category_id,
+    image_url
+) VALUES
+   (
+      'Conférence sur Intelligence Artificielle',
+      'Rejoignez-nous pour une conférence lintelligence artificielle',
+      '2025-03-15 09:00:00',
+      'Paris',
+      150.00,
+      200,
+      'Actif',
+      1,
+      'https://placehold.co/200x200'
+   ),
+   (
+      'Festival de Musique Electronique',
+      'Un festival avec les meilleurs DJs du monde pour une nuit électro incroyable.',
+      '2025-04-05 22:00:00',
+      'Berlin',
+      80.00,
+      5000,
+      'Actif',
+      2,
+      'https://placehold.co/400x200?text=Electronic+Festival'
+   ),
+   (
+      'Conférence sur la Blockchain',
+      'Découvrez les dernières innovations dans le domaine de la blockchain et des cryptomonnaies.',
+      '2025-05-12 14:00:00',
+      'Londres',
+      200.00,
+      100,
+      'Actif',
+      3,
+      'https://placehold.co/400x200?text=Blockchain+Conference'
+   ),
+   (
+      'Séminaire sur le Marketing Digital',
+      'Participez à un séminaire sur les tendances actuelles du marketing digital.',
+      '2025-06-20 09:30:00',
+      'Madrid',
+      120.00,
+      150,
+      'En attente',
+      1,
+      'https://placehold.co/400x200?text=Digital+Marketing+Seminar'
+   ),
+   (
+      'Compétition de Cuisine Gastronomique',
+      'Un concours où des chefs renommés s’affrontent pour créer les plats les plus innovants.',
+      '2025-07-07 11:00:00',
+      'Nice',
+      50.00,
+      200,
+      'Actif',
+      5,
+      'https://placehold.co/400x200?text=Cooking+Competition'
+   );
 
 

@@ -4,66 +4,90 @@
 
 {% block content %}
 <div class="container">
-    <h2 class="mb-4">Liste des événements </h2>
-    <div class="row">
-        {% if events|length > 0 %}
-            {% for event in events %}
-            <div class="col-md-6 mb-4">
-                <div class="card">
-                    <img src="{{ event.image_url | default('https://placehold.co/200x100') }}" class="card-img-top" alt="{{ event.title }}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ event.title }}</h5>
-                        <p class="card-text">{{ event.description|slice(0, 100) }}...</p>
-                        <p><strong>Date :</strong> {{ event.date|date('d/m/Y H:i') }}</p>
-                        <p><strong>Lieu :</strong> {{ event.location }}</p>
-                        <p><strong>Catégorie :</strong> {{ event.category_id }}</p>
-                        <p><strong>Statut :</strong> {{ event.status }}</p>
-                      <a href="/event_detail/{{ event.id }}" class="btn btn-primary btn-sm">Détails</a>
-
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        {% else %}
-            <p class="text-muted">Aucun événement réservé.</p>
-        {% endif %}
+    <h2 class="mb-4">Liste des événements</h2>
+    <h2 class="mb-4">Events : {{ countEvents }}</h2>
+    <div class="row" id="events-container">
     </div>
-     {# <nav>
-        <ul class="pagination justify-content-center">
-            <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
-                <a class="page-link" href="?page={{ current_page - 1 }}">Précédent</a>
-            </li>
-            {% for i in 1..total_pages %}
-                <li class="page-item {% if current_page == i %}active{% endif %}">
-                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
-                </li>
-            {% endfor %}
-            <li class="page-item {% if current_page == total_pages %}disabled{% endif %}">
-                <a class="page-link" href="?page={{ current_page + 1 }}">Suivant</a>
-            </li>
-        </ul>
-    </nav> #}
-
-        
-        {# <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">Catégories</div>
-                <div class="card-body">
-                    <ul class="list-group">
-                        {% for category in categories %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ category.name }}
-                                <span class="badge bg-primary rounded-pill">{{ category.eventCount }}</span>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div> #}
+    <div id="loading" style="display:none;">Loading more events...</div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+const numberOfPages = {{ countPages }};
+let counter = 0;
+    let page = 1; // Track the current page for pagination
+    let isLoading = false; // Prevent multiple simultaneous fetches
 
+    function loadMoreEvents() {
+        if (isLoading) return; // Prevent multiple simultaneous fetches
+        isLoading = true;
 
+        fetch(`/getEvents?page=${page}`) // Add pagination parameters
+            .then(response => response.json())
+            .then(data => {
+                if (data.length === 0) {
+                    observer.unobserve(sentinel); // Stop observing if no more events
+                    return;
+                }
 
-{# jffjf #}
+                console.log('Fetched more events');
+                const eventsContainer = document.getElementById('events-container');
+                eventsContainer.innerHTML = '';
+                data.forEach(event => {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.classList.add('col-md-6', 'mb-4');
+                    eventDiv.innerHTML = `
+                        <div class="card">
+                            <img src="${event.image_url || 'https://placehold.co/200x100'}" class="card-img-top" alt="${event.title}">
+                            <div class="card-body">
+                                <h5 class="card-title">${event.title}</h5>
+                                <p class="card-text">${event.description.slice(0, 100)}...</p>
+                                <p><strong>Date :</strong> ${event.date}</p>
+                                <p><strong>Lieu :</strong> ${event.location}</p>
+                                <p><strong>Catégorie :</strong> ${event.category_id}</p>
+                                <p><strong>Statut :</strong> ${event.status}</p>
+                                <a href="/event_detail/${event.id}" class="btn btn-primary btn-sm">Détails</a>
+                            </div>
+                        </div>
+                    `;
+                    eventsContainer.appendChild(eventDiv);
+                });
+
+                page++; 
+                isLoading = false;
+            })
+            .catch(error => {
+                console.error('Error fetching events:', error);
+                isLoading = false;
+            });
+        counter++;
+        if(counter >= numberOfPages) {
+            observer.unobserve(sentinel);
+        }
+        
+    }
+
+    // Initial load
+    loadMoreEvents();
+
+    // Create a sentinel element to observe
+    const sentinel = document.createElement('div');
+    sentinel.id = 'sentinel';
+    document.body.appendChild(sentinel);
+
+    // Intersection Observer setup
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            loadMoreEvents();
+        }
+    }, {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1 // Trigger when 10% of the sentinel is visible
+    });
+
+    observer.observe(sentinel);
+    
+});            
+</script>
+
 {% endblock %}

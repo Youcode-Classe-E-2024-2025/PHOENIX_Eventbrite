@@ -222,8 +222,8 @@ class Event
 
     public function addEvent()
     {
-        $requet = "INSERT INTO events (title, description, date, location, price, capacity, organizer_id, status, category_id, created_at, updated_at) 
-                   VALUES (:title, :description, :date, :location, :price, :capacity, :organizer_id, :status, :category_id, NOW(), NOW())";
+        $requet = "INSERT INTO events (title, description, date, location, price, capacity, organizer_id, status, category_id, created_at, updated_at, image_url) 
+                   VALUES (:title, :description, :date, :location, :price, :capacity, :organizer_id, :status, :category_id, NOW(), NOW(), :image_url)";
         $stmt = Database::getInstance()->prepare($requet);
         return $stmt->execute([
             'title' => $this->name,
@@ -234,7 +234,8 @@ class Event
             'capacity' => $this->capacity,
             'organizer_id' => $this->organizer_id,
             'status' => $this->status,
-            'category_id' => $this->category_id
+            'category_id' => $this->category_id,
+            'image_url' => $this->image_url
         ]);
     }
 
@@ -258,7 +259,7 @@ class Event
             capacity = :capacity,
             status = :status,
             category_id = :category_id,
-            -- image_url = COALESCE(:image_url, image_url),
+            image_url = COALESCE(:image_url, image_url),
             updated_at = NOW()
             WHERE id = :id";
             
@@ -273,7 +274,7 @@ class Event
             ':capacity' => $this->capacity,
             ':status' => $this->status,
             ':category_id' => $this->category_id,
-            // ':image_url' => $this->image_url
+            ':image_url' => $this->image_url
         ]);
     }
 
@@ -287,4 +288,6 @@ class Event
         ]);
         return $event['name'];
     }
+
+    
 }

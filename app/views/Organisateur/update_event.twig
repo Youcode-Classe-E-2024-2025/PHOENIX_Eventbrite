@@ -54,10 +54,10 @@
                         <div class="mb-3">
                             <label for="category" class="form-label">Category</label>
                             <select class="form-select" id="category" name="category" required>
-                                <option value="1" {% if event.category_id == 1 %}selected{% endif %}>Technology</option>
-                                <option value="2" {% if event.category_id == 2 %}selected{% endif %}>Music</option>
-                                <option value="3" {% if event.category_id == 3 %}selected{% endif %}>Sports</option>
-                                <option value="4" {% if event.category_id == 4 %}selected{% endif %}>Art</option>
+                                <option value="">Select a category</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}" {% if event.category_id == category.id %}selected{% endif %}>{{ category.name }}</option>
+                                {% endfor %}
                             </select>
                         </div>
 

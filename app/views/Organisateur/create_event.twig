@@ -59,17 +59,16 @@
                             <label for="category" class="form-label">Category</label>
                             <select class="form-select" id="category" name="category" required>
                                 <option value="">Select a category</option>
-                                <option value="1">Conference</option>
-                                <option value="2">Concert</option>
-                                <option value="3">Sport</option>
-                                <option value="4">Atelier</option>
-          </select>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
 
                         <!-- Event Image -->
                         <div class="mb-3">
                             <label for="image" class="form-label">Event Image</label>
-                            <input type="url" class="form-control" id="image" name="image_url" required>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
                         </div>
 
                         <!-- Status -->
@@ -84,7 +83,7 @@
 
                         <!-- Submit Buttons -->
                         <div class="d-flex justify-content-between">
-                            <a href="/organizer/dashboard" class="btn btn-secondary">Cancel</a>
+                            <a href="/dashboard" class="btn btn-secondary">Cancel</a>
                             <button type="submit" class="btn btn-primary">Create Event</button>
                         </div>
                     </form>

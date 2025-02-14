@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Models\Event;
+use App\Models\Category;
 
 class EventController extends Controller
 {
@@ -24,8 +25,8 @@ class EventController extends Controller
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Organisateur') {
             $this->redirect('/login');
         }
-
-        $this->render('Organisateur/create_event');
+        $categories = Category::getAllCategories();
+        $this->render('Organisateur/create_event', ['categories' => $categories]);
     }
 
     /**
@@ -33,7 +34,7 @@ class EventController extends Controller
      */
     public function store()
     {
-         // Vérifier si l'utilisateur est connecté et est un organisateur
+        // Vérifier si l'utilisateur est connecté et est un organisateur
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Organisateur') {
             $this->redirect('/login');
         }
@@ -48,57 +49,61 @@ class EventController extends Controller
         $price = filter_input(INPUT_POST, 'price', FILTER_VALIDATE_FLOAT);
         $category = $this->sanitizeInput($_POST['category'] ?? '');
         $status = $this->sanitizeInput($_POST['status'] ?? '');
-        $imageUrl = filter_input(INPUT_POST, 'image_url', FILTER_VALIDATE_URL);
+
 
         // Validation de base
-        if (!$title || !$description || !$date || !$time || !$location || 
-            !$capacity || !$price || !$category || !$status || !$imageUrl) {
+        if (!$title || !$description || !$date || !$time || !$location || !$capacity || !$price || !$category || !$status) {
             $_SESSION['error'] = 'All fields are required and must be valid';
-            echo $_SESSION['error'];
-            $this->render('Organisateur/create_event', [
-                'title' => $title,
-                'description' => $description,
-                'date' => $date . ' ' . $time,
-                'location' => $location,
-                'capacity' => $capacity,
-                'price' => $price,
-                'category' => $category,
-                'status' => $status,
-                'image' => $imageUrl,
-                'organizer_id' => $_SESSION['user_id']
-            ]);
+            $this->redirect('/events/create');
+            return;
+        }
 
-            $this->redirect('/dashboard');
+        // Gestion de l'upload d'image
+        $imageUrl = null;
+        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = dirname(dirname(__DIR__)) . '/public/uploads/events/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
 
+            $imageFileName = uniqid() . '_' . basename($_FILES['image']['name']);
+            $targetPath = $uploadDir . $imageFileName;
+
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
+                $imageUrl = '/uploads/events/' . $imageFileName;
+            } else {
+                $_SESSION['error'] = "Failed to upload image. Error: " . error_get_last()['message'];
+                $this->redirect('/events/create');
+                return;
+            }
+        } else {
+            $_SESSION['error'] = "Image is required";
+            $this->redirect('/events/create');
             return;
         }
 
         // Création de l'événement
-        $eventData = [
-            'title' => $title,
-            'description' => $description,
-            'date' => $date . ' ' . $time,
-            'location' => $location,
-            'capacity' => $capacity,
-            'price' => $price,
-            'category' => $category,
-            'status' => $status,
-            'image' => $imageUrl,
-            'organizer_id' => $_SESSION['user_id']
-        ];
+        $newEvent = new Event(
+            null,
+            $title,
+            $description,
+            $date . ' ' . $time,
+            $location,
+            $price,
+            $capacity,
+            $_SESSION['user_id'],
+            $status,
+            $category,
+            $imageUrl
+        );
 
-        var_dump($eventData);
+        if ($newEvent->addEvent()) {
+            $_SESSION['success'] = "Event created successfully.";
+        } else {
+            $_SESSION['error'] = "Error creating event.";
+        }
 
-        $newEvent = new Event(null, $title, $description, $date . ' ' . $time, $location, $price, $capacity, $_SESSION['user_id'], $status, $category);
-        $newEvent->addEvent();
-        // try {
-        //     $this->eventModel->create($eventData);
-        //     $_SESSION['success'] = 'Event created successfully';
-        //     $this->redirect('/organizer/dashboard');
-        // } catch (\Exception $e) {
-        //     $_SESSION['error'] = 'Error creating event: ' . $e->getMessage();
-        //     echo $_SESSION['error'];
-        // }
+        $this->redirect('/dashboard');
     }
 
     /**
@@ -124,13 +129,13 @@ class EventController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $id = htmlspecialchars($_GET['id']);
             $event = (new Event())->selectEventById($id);
-            
+
             if (!$event) {
                 $_SESSION['error'] = "Event not found.";
                 $this->redirect('/dashboard');
             }
-
-            $this->render('Organisateur/update_event', ['event' => $event]);
+            $categories = Category::getAllCategories();
+            $this->render('Organisateur/update_event', ['event' => $event, 'categories' => $categories]);
             return;
         }
 
@@ -150,16 +155,18 @@ class EventController extends Controller
             // Gestion de l'image
             $imageUrl = null;
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $uploadDir = '/uploads/events/';
+                $uploadDir = dirname(dirname(__DIR__)) . '/public/uploads/events/';
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0777, true);
                 }
-                
+
                 $imageFileName = uniqid() . '_' . basename($_FILES['image']['name']);
                 $targetPath = $uploadDir . $imageFileName;
-                
+
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
                     $imageUrl = '/uploads/events/' . $imageFileName;
+                } else {
+                    $_SESSION['error'] = "Failed to upload image. Error: " . error_get_last()['message'];
                 }
             }
 
@@ -179,13 +186,14 @@ class EventController extends Controller
 
             if ($event->updateEvent()) {
                 $_SESSION['success'] = "Event updated successfully.";
+                $this->redirect('/dashboard');
             } else {
                 $_SESSION['error'] = "Error updating event.";
             }
 
-            $this->redirect('/dashboard');
+            // $this->redirect('/dashboard');
         }
-    } 
+    }
 
     /**
      * Supprime un événement

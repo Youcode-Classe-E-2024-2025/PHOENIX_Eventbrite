@@ -343,5 +343,3 @@ INSERT INTO events (
       4,
       'https://placehold.co/400x200?text=Atelier+Photo'
    );
-ALTER TABLE users
-ADD COLUMN VIP_user BOOLEAN DEFAULT FALSE;

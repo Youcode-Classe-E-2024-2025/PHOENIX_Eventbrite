@@ -48,4 +48,9 @@ class Database
     {
         self::getInstance()->rollBack();
     }
+
+    public static function lastInsertId()
+    {
+        return self::getInstance()->lastInsertId();
+    }
 }

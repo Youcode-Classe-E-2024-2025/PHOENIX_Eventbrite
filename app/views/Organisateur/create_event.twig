@@ -11,7 +11,7 @@
                     <h4 class="mb-0">Create New Event</h4>
                 </div>
                 <div class="card-body">
-                    <form action="/events/create" method="POST" enctype="multipart/form-data">
+                    <form action="create_event" method="POST" enctype="multipart/form-data">
                         <!-- Event Title -->
                         <div class="mb-3">
                             <label for="title" class="form-label">Event Title</label>
@@ -59,33 +59,44 @@
                             <label for="category" class="form-label">Category</label>
                             <select class="form-select" id="category" name="category" required>
                                 <option value="">Select a category</option>
-                                <option value="conference">Conference</option>
-                                <option value="workshop">Workshop</option>
-                                <option value="concert">Concert</option>
-                                <option value="exhibition">Exhibition</option>
-                                <option value="other">Other</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endfor %}
                             </select>
                         </div>
 
                         <!-- Event Image -->
                         <div class="mb-3">
                             <label for="image" class="form-label">Event Image</label>
-                            <input type="url" class="form-control" id="image" name="image_url" required>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
                         </div>
 
                         <!-- Status -->
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select" id="status" name="status" required>
-                                <option value="draft">Draft</option>
-                                <option value="active">Active</option>
-                                <option value="cancelled">Cancelled</option>
+                                <option value="Actif">Active</option>
+                                <option value="En attente">Pending</option>
+                                <option value="Terminé">Completed</option>
                             </select>
                         </div>
-
+                        <div class="mb-3">
+                            <label for="tags" class="form-label">Tags</label>
+                            <div class="border rounded p-3 d-flex flex-wrap gap-2">
+                                {% for tag in tags %}
+                                <div class="tag-item">
+                                    <input type="checkbox" class="btn-check" name="tags[]" id="tag{{ tag.id }}" value="{{ tag.id }}" autocomplete="off">
+                                    <label class="btn btn-outline-primary btn-sm rounded-pill" for="tag{{ tag.id }}">
+                                        {{ tag.name }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <small class="form-text text-muted mt-2">Cliquez sur les tags pour les sélectionner</small>
+                        </div>
                         <!-- Submit Buttons -->
                         <div class="d-flex justify-content-between">
-                            <a href="/organizer/dashboard" class="btn btn-secondary">Cancel</a>
+                            <a href="/dashboard" class="btn btn-secondary">Cancel</a>
                             <button type="submit" class="btn btn-primary">Create Event</button>
                         </div>
                     </form>

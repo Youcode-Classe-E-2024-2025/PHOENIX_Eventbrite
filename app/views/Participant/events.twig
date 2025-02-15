@@ -1,0 +1,93 @@
+{% extends 'Layouts/base.twig' %}
+
+{% block title %}Liste des événements{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Liste des événements</h2>
+    <h2 class="mb-4">Events : {{ countEvents }}</h2>
+    <div class="row" id="events-container">
+    </div>
+    <div id="loading" style="display:none;">Loading more events...</div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+const numberOfPages = {{ countPages }};
+let counter = 0;
+    let page = 1; // Track the current page for pagination
+    let isLoading = false; // Prevent multiple simultaneous fetches
+
+    function loadMoreEvents() {
+        if (isLoading) return; // Prevent multiple simultaneous fetches
+        isLoading = true;
+
+        fetch(`/getEvents?page=${page}`) // Add pagination parameters
+            .then(response => response.json())
+            .then(data => {
+                if (data.length === 0) {
+                    observer.unobserve(sentinel); // Stop observing if no more events
+                    return;
+                }
+
+                console.log('Fetched more events');
+                const eventsContainer = document.getElementById('events-container');
+                eventsContainer.innerHTML = '';
+                data.forEach(event => {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.classList.add('col-md-6', 'mb-4');
+                    eventDiv.innerHTML = `
+                        <div class="card">
+                            <img src="${event.image_url || 'https://placehold.co/200x100'}" class="card-img-top" alt="${event.title}">
+                            <div class="card-body">
+                                <h5 class="card-title">${event.title}</h5>
+                                <p class="card-text">${event.description.slice(0, 100)}...</p>
+                                <p><strong>Date :</strong> ${event.date}</p>
+                                <p><strong>Lieu :</strong> ${event.location}</p>
+                                <p><strong>Catégorie :</strong> ${event.category_id}</p>
+                                <p><strong>Statut :</strong> ${event.status}</p>
+                                <a href="/event_detail/${event.id}" class="btn btn-primary btn-sm">Détails</a>
+                            </div>
+                        </div>
+                    `;
+                    eventsContainer.appendChild(eventDiv);
+                });
+
+                page++; 
+                isLoading = false;
+            })
+            .catch(error => {
+                console.error('Error fetching events:', error);
+                isLoading = false;
+            });
+        counter++;
+        if(counter >= numberOfPages) {
+            observer.unobserve(sentinel);
+        }
+        
+    }
+
+    // Initial load
+    loadMoreEvents();
+
+    // Create a sentinel element to observe
+    const sentinel = document.createElement('div');
+    sentinel.id = 'sentinel';
+    document.body.appendChild(sentinel);
+
+    // Intersection Observer setup
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            loadMoreEvents();
+        }
+    }, {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1 // Trigger when 10% of the sentinel is visible
+    });
+
+    observer.observe(sentinel);
+    
+});            
+</script>
+
+{% endblock %}

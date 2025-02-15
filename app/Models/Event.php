@@ -18,6 +18,7 @@ class Event
     private $organizer_id;
     private $status;
     private $category_id;
+    private $image_url;
     private $created_at;
     private $updated_at;
     private $tags = [];
@@ -26,7 +27,7 @@ class Event
 
 
     // Constructor remains the same
-    public function __construct($id = '', $name = '', $description = '', $date = '', $location = '', $price = '', $capacity = '', $organizer_id = '', $status = '', $category_id = '')
+    public function __construct($id = '', $name = '', $description = '', $date = '', $location = '', $price = '', $capacity = '', $organizer_id = '', $status = '', $category_id = '', $image_url = '')
     {
         $this->id = $id;
         $this->name = $name;
@@ -38,6 +39,7 @@ class Event
         $this->organizer_id = $organizer_id;
         $this->status = $status;
         $this->category_id = $category_id;
+        $this->image_url = $image_url;
         // $this->created_at = $created_at;
         // $this->updated_at = $updated_at;
         // $this->tags = $tags;
@@ -102,6 +104,36 @@ class Event
             'organizer_id' => $this->organizer_id,
             'status' => $this->status,
             'category_id' => $this->category_id
+        ]);
+    }
+
+    public function updateEvent()
+    {
+        $requet = "UPDATE events SET 
+            title = :title,
+            description = :description,
+            date = :date,
+            location = :location,
+            price = :price,
+            capacity = :capacity,
+            status = :status,
+            category_id = :category_id,
+            image_url = COALESCE(:image_url, image_url),
+            updated_at = NOW()
+            WHERE id = :id";
+            
+        $stmt = Database::getInstance()->prepare($requet);
+        return $stmt->execute([
+            ':id' => $this->id,
+            ':title' => $this->name,
+            ':description' => $this->description,
+            ':date' => $this->date,
+            ':location' => $this->location,
+            ':price' => $this->price,
+            ':capacity' => $this->capacity,
+            ':status' => $this->status,
+            ':category_id' => $this->category_id,
+            ':image_url' => $this->image_url
         ]);
     }
 

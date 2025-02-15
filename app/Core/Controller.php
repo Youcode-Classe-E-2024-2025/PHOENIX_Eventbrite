@@ -40,6 +40,7 @@ abstract class Controller
         header("Location: $path");
         exit;
     }
+    
 
     protected function isAuthenticated(): bool
     {

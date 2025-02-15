@@ -110,6 +110,7 @@ class Router
             
             if (strpos($segment, ':') === 0) {
                 continue;
+
             }
 
             if (!isset($requestSegments[$key]) || $segment !== $requestSegments[$key]) {

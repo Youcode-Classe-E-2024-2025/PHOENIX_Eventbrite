@@ -18,16 +18,14 @@ class Event
     private $organizer_id;
     private $status;
     private $category_id;
-    private $image_url;
     private $created_at;
     private $updated_at;
     private $tags = [];
-    private static $limit = 4;
     // private $ContentVisuels = [];
 
 
     // Constructor remains the same
-    public function __construct($id = '', $name = '', $description = '', $date = '', $location = '', $price = '', $capacity = '', $organizer_id = '', $status = '', $category_id = '', $image_url = '')
+    public function __construct($id = '', $name = '', $description = '', $date = '', $location = '', $price = '', $capacity = '', $organizer_id = '', $status = '', $category_id = '')
     {
         $this->id = $id;
         $this->name = $name;
@@ -39,7 +37,6 @@ class Event
         $this->organizer_id = $organizer_id;
         $this->status = $status;
         $this->category_id = $category_id;
-        $this->image_url = $image_url;
         // $this->created_at = $created_at;
         // $this->updated_at = $updated_at;
         // $this->tags = $tags;
@@ -107,36 +104,6 @@ class Event
         ]);
     }
 
-    public function updateEvent()
-    {
-        $requet = "UPDATE events SET 
-            title = :title,
-            description = :description,
-            date = :date,
-            location = :location,
-            price = :price,
-            capacity = :capacity,
-            status = :status,
-            category_id = :category_id,
-            image_url = COALESCE(:image_url, image_url),
-            updated_at = NOW()
-            WHERE id = :id";
-            
-        $stmt = Database::getInstance()->prepare($requet);
-        return $stmt->execute([
-            ':id' => $this->id,
-            ':title' => $this->name,
-            ':description' => $this->description,
-            ':date' => $this->date,
-            ':location' => $this->location,
-            ':price' => $this->price,
-            ':capacity' => $this->capacity,
-            ':status' => $this->status,
-            ':category_id' => $this->category_id,
-            ':image_url' => $this->image_url
-        ]);
-    }
-
 
     public static function selectEventById($id)
     {
@@ -158,6 +125,18 @@ class Event
         return $event['name'];
     }
 
+
+
+    // public function SelectEventPraticiper($id_user){
+    //         $requet = "SELECT e.title , e.description , e.location, e.status, e.category_id ,e.status  FROM events AS e JOIN reservations AS c ON c.event_id = e.id where c.user_id = :id_user";
+    //         $stmt = Database::getInstance()->prepare($requet);
+    //         $stmt->execute([
+    //             ':id_user' => $id_user,
+    //         ]);
+    //         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // }
+
+
     public function searchEvent() {}
     public  function SelectEventPraticiper($id_user)
     {
@@ -168,13 +147,13 @@ class Event
         ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
-    public static function getEvents() {
-        $page = $_GET['page'] ?? 1;
-        $limit = $page * 4;
-        $stmt = database::getInstance()->prepare("SELECT * FROM events LIMIT :limit");
-        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-        $stmt->execute();
+    public static function getPaginationEvent($limit, $offest)
+    {
+        $requet = "SELECT * FROM events ORDER BY date LIMIT :LIMIT OFFSET :OFFSET"; $stmt =  $stmt = Database::getInstance()->prepare($requet);
+        $stmt->execute([
+            ':LIMIT' => $limit,
+            ':OFFSET' => $offest
+        ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

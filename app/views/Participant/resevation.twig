@@ -1,5 +1,4 @@
 {% extends 'layouts/base.twig' %}
-
 {% block title %}Réserver un billet pour : {{ event.title }}{% endblock %}
 
 {% block content %}
@@ -18,18 +17,15 @@
             <div class="card">
                 <div class="card-header">Réservez votre billet</div>
                 <div class="card-body">
-                    <form action="/reservation/{{ event.id }}" method="POST">
-                        <div class="mb-3">
-                            <label for="ticket_type" class="form-label">Type de billet</label>
-                            <select class="form-control" id="ticket_type" name="ticket_type">
-                                <option value="Gratuit">Gratuit</option>
-                                <option value="Payant">Payant</option>
-                                <option value="VIP">VIP</option>
-                            </select>
-                        </div>
+                    <form action="/resevation/{{ event.id }}" method="POST">
+
                         <div class="mb-3">
                             <label for="quantity" class="form-label">Quantité</label>
-                            <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
+                              <input type="number" class="form-control" id="quantity" name="quantity" min="1" value="1" required>
+                        </div>
+                         <div class="mb-3">
+                            <label for="TotalPrice" class="form-label">Total price</label>
+                              <input type="number" class="form-control" id="totalPrice" name="totalPrice" min="1" value="0" readonly>
                         </div>
                         <div class="mb-3">
                             <button type="submit" class="btn btn-primary">Réserver</button>
@@ -40,4 +36,29 @@
         </div>
     </div>
 </div>
+
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const quantityInput = document.getElementById('quantity');
+        const totalPriceInput = document.getElementById('totalPrice');
+        const eventPrice = 50;  // Remplace ceci par la valeur dynamique de l'événement, par exemple : {{ event.price }}
+
+        function updateTotalPrice() {
+            const quantity = parseInt(quantityInput.value) || 1;
+            const totalPrice = quantity * eventPrice;
+            totalPriceInput.value = totalPrice.toFixed(2); // Format en 2 décimales
+        }
+
+        quantityInput.addEventListener('input', updateTotalPrice);
+
+        // Initialisation du prix total
+        updateTotalPrice();
+    });
+</script>
+
+
+
+
 {% endblock %}

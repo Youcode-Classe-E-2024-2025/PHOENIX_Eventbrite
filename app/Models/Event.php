@@ -296,22 +296,17 @@ class Event
 
     public static function getLastInsertedId()
     {
-        $requet = "SELECT e.title , e.description , e.location, e.status, e.category_id ,e.status  FROM events AS e JOIN reservations AS c ON c.event_id = e.id where c.user_id = :id_user ORDER BY e.date DESC";
-        $stmt = Database::getInstance()->prepare($requet);
-        $stmt->execute([
-            ':id_user' => $id_user,
-        ]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    public static function getPaginationEvent($limit, $offest)
-    {
-        $requet = "SELECT * FROM events ORDER BY date LIMIT :LIMIT OFFSET :OFFSET";
-        $stmt =  $stmt = Database::getInstance()->prepare($requet);
-        $stmt->execute([
-            ':LIMIT' => $limit,
-            ':OFFSET' => $offest
-        ]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
         return Database::getInstance()->lastInsertId();
     }
+       public function SelectEventPraticiper($id_user){
+            $requet = "SELECT e.title , e.description , e.location, e.status, e.category_id ,e.status  FROM events AS e JOIN reservations AS c ON c.event_id = e.id where c.user_id = :id_user";
+            $stmt = Database::getInstance()->prepare($requet);
+            $stmt->execute([
+                ':id_user' => $id_user,
+            ]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 }
+
+ 

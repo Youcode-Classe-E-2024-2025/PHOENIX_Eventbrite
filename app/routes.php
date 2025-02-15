@@ -16,10 +16,12 @@ $router->get('/logout', [AuthController::class, 'logout']);
 
 // Profile route
 $router->get('/profile', [AuthController::class, 'profile']);
+$router->post('/profile/:id', [AuthController::class, 'profile']);
 
-// Dashboard route
-$router->get('/dashboard', [DashboardController::class, 'dashboard']);
-// $router->get('/events/:page', [PaticipantController::class, 'EventsPagination']);
+// // Dashboard route
+// $router->get('/dashboard', [DashboardController::class, 'dashboard']);
+// $router->get('/events',[PaticipantController::class, 'EventsPagination']);
+$router->get('/events', [PaticipantController::class, 'EventsPagination']);
 $router->get('/event_detail/:id', [PaticipantController::class, 'AccederEvent']);
 
 

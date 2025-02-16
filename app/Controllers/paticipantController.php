@@ -5,7 +5,7 @@ use App\Core\Controller;
 use App\Models\Event;
 use App\Models\Reservation;
 
-    class ParticipantController extends Controller{
+    class paticipantController extends Controller{
 
         public function __construct(){
             parent::__construct();

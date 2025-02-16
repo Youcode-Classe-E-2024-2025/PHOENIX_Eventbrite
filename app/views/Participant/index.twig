@@ -5,8 +5,10 @@
 {% block content %}
 <div class="container">
     <h2 class="mb-4">Dashboard</h2>
-
-    <div class="row">
+    
+    
+        
+ <div class="row">
         <div class="col-md-8">
             <div class="card mb-4">
                 <div class="card-header">Événements réservés ({{ events|length }})</div>
@@ -21,7 +23,9 @@
                                         <p class="mb-1"><strong>Lieu :</strong> {{ event.location }}</p>
                                         <p class="mb-1"><strong>Catégorie :</strong> {{ event.category_id }}</p>
                                         <p class="mb-1"><strong>Statut :</strong> {{ event.status }}</p>
+                                        {# <small class="text-muted">{{ event.date|date('d/m/Y H:i') }}</small> #}
                                     </div>
+                                    {# <a href="{{ path('event_details', {'id': event.id}) }}" class="btn btn-primary btn-sm">Détails</a> #}
                                 </li>
                             {% endfor %}
                         </ul>
@@ -29,55 +33,25 @@
                         <p class="text-muted">Aucun événement réservé.</p>
                     {% endif %}
                 </div>
-            </div>
-
-            <!-- Section Notifications -->
+        
             <div class="card">
                 <div class="card-header">Notifications</div>
                 <div class="card-body">
-                    <ul class="list-group" id="notification-list">
-                        {% if notifications|length > 0 %}
+                    {% if notifications|length > 0 %}
+                        <ul class="list-group">
                             {% for notification in notifications %}
                                 <li class="list-group-item">
                                     <i class="bi bi-bell me-2"></i> {{ notification.message }}
                                     <small class="text-muted d-block">{{ notification.date|date('d/m/Y H:i') }}</small>
                                 </li>
                             {% endfor %}
-                        {% else %}
-                            <p class="text-muted">Aucune notification.</p>
-                        {% endif %}
-                    </ul>
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">Aucune notification.</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
-    </div>
-
+  
 </div>
-
-<script>
-  function fetchNotifications() {
-    fetch('/index')  // Assurez-vous que l'URL est correcte
-   
-        .then(response => response.json())
-        .then(notifications => {
-            let list = document.getElementById('notification-list');
-            list.innerHTML = '';  // Vider la liste actuelle
-        console.log(notifications); 
-            // Ajouter chaque notification à la liste
-            notifications.forEach(notification => {
-                let item = document.createElement('li');
-                item.classList.add('list-group-item');
-                item.innerHTML = `<i class="bi bi-bell me-2"></i> ${notification.message} <small class="text-muted d-block">${notification.date}</small>`;
-                list.appendChild(item);
-            });
-        })
-        .catch(error => {
-            console.error("Erreur lors du chargement des notifications:", error);
-        });
-}
-
-// Charger les notifications dès le chargement de la page
-window.onload = fetchNotifications;
-</script>
-
 {% endblock %}

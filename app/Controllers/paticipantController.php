@@ -49,9 +49,9 @@ class PaticipantController extends Controller
     {
         $events = $this->getPaginationEvent($page);
         $page = $events['currentPage'];
-         $totalPages = $events['totalEvents'];
+        $totalPages = $events['totalEvents'];
         $totalEvents = $events['totalEvents'];
-       
+        var_dump($page);
         if (!$events['events']) {
             throw new \Exception('Event not found', 404);
         }
@@ -67,16 +67,5 @@ class PaticipantController extends Controller
 
         $this->render('Participant/event_detail', ['event' => $event, 'id' => $id]);
     }
-   
-
-
-    public function getNotifications()
-    {
-        $notifications = "hello";
-
-        // Retourner les notifications au format JSON pour AJAX
-        header('Content-Type: application/json');
-        echo json_encode($notifications);
-        exit;  // Terminer l'exécution après l'envoi des notifications JSON
-    }
+    
 }

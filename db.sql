@@ -19,8 +19,12 @@ VALUES ('admin@example.com', '$argon2id$v=19$m=65536,t=4,p=1$RnBjTzRnalZlVHV3M08
 CREATE TABLE
    categories (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL);
 
+<<<<<<< HEAD
 
 CREATE TABLE  
+=======
+CREATE TABLE
+>>>>>>> origin/feature/events_crud
    events (
       id SERIAL PRIMARY KEY,
       title VARCHAR(255) NOT NULL,
@@ -339,17 +343,15 @@ INSERT INTO events (
       'Actif',
       4,
       'https://placehold.co/400x200?text=Atelier+Photo'
+<<<<<<< HEAD
    );
 ALTER TABLE users
 ADD COLUMN VIP_user BOOLEAN DEFAULT FALSE;
+ALTER Table users 
+DROP COLUMN VIP_user ;
 
-
-CREATE TABLE notifications (
-    id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    event_id INT REFERENCES events(id) ON DELETE SET NULL,
-    message TEXT NOT NULL,
-    status VARCHAR(20) DEFAULT 'unread',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
+ALTER Table events
+DROP COLUMN  ticket_type ;
+=======
+   );
+>>>>>>> origin/feature/events_crud

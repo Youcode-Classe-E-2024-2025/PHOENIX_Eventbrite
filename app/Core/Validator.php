@@ -64,4 +64,12 @@ class Validator
     {
         return $this->errors;
     }
+
+    public function setAvatarUrl(string $field, string $message = null): self
+    {
+        if (isset($this->data[$field]) && !filter_var($this->data[$field], FILTER_VALIDATE_URL)) {
+            $this->errors[$field] = $message ?? "The {$field} must be a valid URL";
+        }
+        return $this;
+    }
 }

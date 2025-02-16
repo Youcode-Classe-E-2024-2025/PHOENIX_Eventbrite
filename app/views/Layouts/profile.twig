@@ -1,61 +1,56 @@
 {% extends 'Layouts/base.twig' %}
 
-{% block title %}Profil de l'utilisateur{% endblock %}
+{% block title %}Modifier mon profil{% endblock %}
 
 {% block content %}
 <div class="container">
-    <h2 class="mb-4">Profil de l'utilisateur</h2>
-
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">Profil utilisateur</div>
-                <div class="card-body text-center">
-                    <!-- Avatar and Name -->
-                    <img src="{{ user.avatar ?? '/images/default-avatar.png' }}" class="rounded-circle mb-3" width="100" height="100" alt="Avatar">
-                    <h5>{{ user.fullName|upper }}</h5>
-                    <p class="text-muted">{{ user.role | capitalize }}</p>
-                    <a href="/profile/edit" class="btn btn-primary btn-sm">Modifier le profil</a>
-                </div>
-            </div>
-        </div>
-        
+    <div class="row justify-content-center">
         <div class="col-md-8">
-            <!-- Event History -->
-            <div class="card mb-4">
-                <div class="card-header">Historique des événements</div>
-                <div class="card-body">
-                    {% if user.events|length > 0 %}
-                        <ul class="list-group">
-                            {% for event in user.events %}
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    {{ event.name }}
-                                    <span class="badge bg-info">{{ event.date|date('d/m/Y') }}</span>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p class="text-muted">Aucun événement enregistré.</p>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Notifications Section -->
             <div class="card">
-                <div class="card-header">Notifications</div>
+                <div class="card-header">
+                    <h4 class="mb-0">Modifier mon profil</h4>
+                </div>
                 <div class="card-body">
-                    {% if notifications|length > 0 %}
-                        <ul class="list-group">
-                            {% for notification in notifications %}
-                                <li class="list-group-item">
-                                    <i class="bi bi-bell me-2"></i> {{ notification.message }}
-                                    <small class="text-muted d-block">{{ notification.date|date('d/m/Y H:i') }}</small>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p class="text-muted">Aucune notification.</p>
-                    {% endif %}
+                    <form action="/profile/{{ user.id }}" method="POST" enctype="multipart/form-data">
+                        <!-- Profile Picture -->
+                        <div class="text-center mb-4">
+                            <img src="{{ user.avatar_url ?? 'https://placehold.co/100x100' }}" 
+                                 class="rounded-circle mb-3" 
+                                 width="100" height="100" 
+                                 alt="Profile Picture">
+                            <div class="mb-3">
+                                <label for="avatar" class="form-label">Changer la photo de profil</label>
+                                <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+                            </div>
+                        </div>
+
+                        <!-- User Information -->
+                        <div class="mb-3">
+                            <label for="full_name" class="form-label">Nom complet</label>
+                            <input type="text" class="form-control" id="full_name" name="full_name" 
+                                   value="{{ user.fullName }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   value="{{ user.email }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Nouveau mot de passe (laisser vide pour ne pas changer)</label>
+                            <input type="password" class="form-control" id="password" name="password">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password_confirm" class="form-label">Confirmer le nouveau mot de passe</label>
+                            <input type="password" class="form-control" id="password_confirm" name="password_confirm">
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

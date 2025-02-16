@@ -109,22 +109,62 @@ class AuthController extends Controller
 
 
     public function profile()
-{
+    {   
     
-    $userId = $_SESSION['user_id'] ?? null;
+        if($_SERVER['REQUEST_METHOD'] === 'GET'){
+            $userId = $_SESSION['user_id'] ?? null;
+        
+            if (!$userId) {
+                $this->redirect('/');
+            }
     
-    if (!$userId) {
-        $this->redirect('/');
+        
+            $user = User::findById($userId);
+            
+            
+            return $this->render('Layouts/profile', [
+                'user' => $user,
+                'notifications' => [], 
+                'events' => []  
+            ]);
+        }elseif($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $validator = new Validator($_POST);
+            $validator->required('full_name')->minLength('full_name', 3)
+                ->required('email')->email('email');
+            
+            // Only validate password if it's provided
+            if (!empty($_POST['password'])) {
+                $validator->minLength('password', 6);
+            }
+    
+            if ($validator->isValid()) {                
+                $user = User::findById($_SESSION['user_id']);
+                $user->setFullName($_POST['full_name']);
+                $user->setEmail($_POST['email']);
+                
+                // Handle file upload
+                if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+                    $uploadDir = 'uploads/avatars/';
+                    if (!is_dir($uploadDir)) {
+                        mkdir($uploadDir, 0777, true);
+                    }
+                    
+                    $fileName = uniqid() . '_' . basename($_FILES['avatar']['name']);
+                    $targetPath = $uploadDir . $fileName;
+                    
+                    if (move_uploaded_file($_FILES['avatar']['tmp_name'], $targetPath)) {
+                        $user->setAvatar($targetPath);
+                    }
+                }
+                
+                // Only update password if provided
+                if (!empty($_POST['password'])) {
+                    $user->setPassword(Security::hashPassword($_POST['password']));
+                }
+                
+                $user->save();
+                $this->redirect('/profile');
+            }
+        }
     }
-
-    
-    $user = User::findById($userId);
-    
-    
-    return $this->render('Layouts/profile', [
-        'user' => $user,
-        'notifications' => [], 
-        'events' => []  
-    ]);
-}
 }

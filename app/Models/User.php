@@ -23,7 +23,7 @@ class User
         $this->email = $data['email'] ?? '';
         $this->password = $data['password_hash'] ?? $data['password'] ?? '';
         $this->role = $data['role'] ?? 'user';
-        $this->avatar_url = $data['avatar_url'] ?? '/images/default-avatar.png';
+        $this->avatar_url = $data['avatar_url'] ?? 'https://placehold.co/100x100';
         $this->created_at = $data['created_at'] ?? date('Y-m-d H:i:s');
     }
 }
@@ -117,6 +117,7 @@ public function save(): bool
     {
         return $this->avatar_url ;
     }
+    
 
     // Setters
     public function setEmail(string $email): void

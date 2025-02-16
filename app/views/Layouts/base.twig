@@ -88,7 +88,7 @@
                 <ul class="navbar-nav ms-auto">
                     {% if is_authenticated and session.user_role == 'Participant' %}
                         <li class="nav-item">
-                            <a class="nav-link" href="/events">
+                            <a class="nav-link" href="/Events">
                                 <i class="bi bi-speedometer2 me-1"></i>Events
                             </a>
                         </li>
@@ -109,7 +109,7 @@
                         </li>
                     {% elseif is_authenticated and session.user_role == 'Organisateur' %}
                         <li class="nav-item">
-                            <a class="nav-link" href="/events">
+                            <a class="nav-link" href="/Events">
                                 <i class="bi bi-speedometer2 me-1"></i>Events
                             </a>
                         </li>
@@ -135,7 +135,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/events">
+                            <a class="nav-link" href="/Events">
                                 <i class="bi bi-speedometer2 me-1"></i>Events
                             </a>
                         </li>
